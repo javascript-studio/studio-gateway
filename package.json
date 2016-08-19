@@ -1,0 +1,25 @@
+{
+  "name": "@studio/gateway",
+  "version": "0.0.0",
+  "description": "",
+  "private": true,
+  "author": "Maximilian Antoni <max@javascript.studio> (http://javascript.studio)",
+  "main": "lib/gateway.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha",
+    "watch": "mocha --watch",
+    "posttest": "npm run lint",
+    "start": "node ."
+  },
+  "eslintConfig": {
+    "extends": "@studio"
+  },
+  "devDependencies": {
+    "@studio/eslint-config": "0.0.0",
+    "eslint": "^3.0.1",
+    "mocha": "^3.0.0",
+    "sinon": "^1.17.4",
+    "supertest": "^2.0.0"
+  }
+}
