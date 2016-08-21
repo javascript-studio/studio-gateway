@@ -6,6 +6,14 @@ const supertest = require('supertest');
 const sinon = require('sinon');
 const gateway = require('..');
 
+const SOME_LAMBDA = {
+  type: 'aws',
+  uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
+  responses: {
+    default: { statusCode: '200' }
+  }
+};
+
 describe('gateway', () => {
   let sandbox;
   let swagger;
@@ -134,13 +142,7 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            'x-amazon-apigateway-integration': {
-              type: 'aws',
-              uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
-              responses: {
-                default: { statusCode: '200' }
-              }
-            }
+            'x-amazon-apigateway-integration': SOME_LAMBDA
           }
         }
       }
@@ -202,13 +204,7 @@ describe('gateway', () => {
               in: 'header',
               type: 'string'
             }],
-            'x-amazon-apigateway-integration': {
-              type: 'aws',
-              uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
-              responses: {
-                default: { statusCode: '200' }
-              }
-            }
+            'x-amazon-apigateway-integration': SOME_LAMBDA
           }
         }
       }
@@ -239,17 +235,17 @@ describe('gateway', () => {
           post: {
             responses: { 200: {} },
             parameters: [{
-              name: 'some',
               in: 'body',
-              type: 'string'
-            }],
-            'x-amazon-apigateway-integration': {
-              type: 'aws',
-              uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
-              responses: {
-                default: { statusCode: '200' }
+              schema: {
+                type: 'object',
+                properties: {
+                  some: {
+                    type: 'string'
+                  }
+                }
               }
-            }
+            }],
+            'x-amazon-apigateway-integration': SOME_LAMBDA
           }
         }
       }
@@ -274,6 +270,75 @@ describe('gateway', () => {
       });
   });
 
+  it('does not map body json to parameter if not in schema', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            responses: { 200: {} },
+            parameters: [{
+              in: 'body',
+              schema: {
+                type: 'object'
+              }
+            }],
+            'x-amazon-apigateway-integration': SOME_LAMBDA
+          }
+        }
+      }
+    });
+    create();
+    const stub = sinon.stub().yields(null, {});
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('accept', 'application/json')
+      .send({ some: 'content' }) // provided, but ignored
+      .expect(200, (err) => {
+        if (err) {
+          throw err;
+        }
+        sinon.assert.calledOnce(stub);
+        sinon.assert.calledWith(stub, 'some-lambda', {});
+        done();
+      });
+  });
+
+  it('fails if body has no schema', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            responses: { 200: {} },
+            parameters: [{
+              in: 'body'
+            }],
+            'x-amazon-apigateway-integration': SOME_LAMBDA
+          }
+        }
+      }
+    });
+    create();
+    const stub = sinon.stub().yields(null, {});
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('accept', 'application/json')
+      .send({ some: 'content' })
+      .expect(JSON.stringify({
+        errorMessage: 'Missing schema in body parameter'
+      }))
+      .expect(500, (err) => {
+        if (err) {
+          throw err;
+        }
+        sinon.assert.notCalled(stub);
+        done();
+      });
+  });
+
   it('maps query to parameter', (done) => {
     swag({
       paths: {
@@ -285,13 +350,7 @@ describe('gateway', () => {
               in: 'query',
               type: 'string'
             }],
-            'x-amazon-apigateway-integration': {
-              type: 'aws',
-              uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
-              responses: {
-                default: { statusCode: '200' }
-              }
-            }
+            'x-amazon-apigateway-integration': SOME_LAMBDA
           }
         }
       }
@@ -321,17 +380,17 @@ describe('gateway', () => {
           post: {
             responses: { 200: {} },
             parameters: [{
-              name: 'some',
               in: 'body',
-              type: 'string'
-            }],
-            'x-amazon-apigateway-integration': {
-              type: 'aws',
-              uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
-              responses: {
-                default: { statusCode: '200' }
+              schema: {
+                type: 'object',
+                properties: {
+                  some: {
+                    type: 'string'
+                  }
+                }
               }
-            }
+            }],
+            'x-amazon-apigateway-integration': SOME_LAMBDA
           }
         }
       }
