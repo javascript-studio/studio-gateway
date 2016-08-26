@@ -6,13 +6,18 @@ const supertest = require('supertest');
 const sinon = require('sinon');
 const gateway = require('..');
 
-const SOME_LAMBDA = {
-  type: 'aws',
-  uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
-  responses: {
-    default: { statusCode: '200' }
-  }
-};
+function define_lambda(template = '$input.json(\'$\')') {
+  return {
+    type: 'aws',
+    uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
+    requestTemplates: {
+      'application/json': template
+    },
+    responses: {
+      default: { statusCode: '200' }
+    }
+  };
+}
 
 describe('gateway', () => {
   let sandbox;
@@ -142,7 +147,7 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            'x-amazon-apigateway-integration': SOME_LAMBDA
+            'x-amazon-apigateway-integration': define_lambda()
           }
         }
       }
@@ -161,7 +166,9 @@ describe('gateway', () => {
           throw err;
         }
         sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {}); // empty body
+        sinon.assert.calledWith(stub, 'some-lambda', {
+          // Empty body
+        }, {}, sinon.match.func);
         done();
       });
   });
@@ -175,6 +182,9 @@ describe('gateway', () => {
             'x-amazon-apigateway-integration': {
               type: 'aws',
               uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
+              requestTemplates: {
+                'application/json': '{}'
+              },
               responses: {
                 '.*"code":"E_*': { statusCode: '500' },
                 default: { statusCode: '200' }
@@ -204,7 +214,8 @@ describe('gateway', () => {
               in: 'header',
               type: 'string'
             }],
-            'x-amazon-apigateway-integration': SOME_LAMBDA
+            'x-amazon-apigateway-integration':
+              define_lambda('{"auth":"$input.params(\'Authorization\')"}')
           }
         }
       }
@@ -222,8 +233,8 @@ describe('gateway', () => {
         }
         sinon.assert.calledOnce(stub);
         sinon.assert.calledWith(stub, 'some-lambda', {
-          Authorization: 'Secret'
-        });
+          auth: 'Secret'
+        }, {}, sinon.match.func);
         done();
       });
   });
@@ -245,7 +256,7 @@ describe('gateway', () => {
                 }
               }
             }],
-            'x-amazon-apigateway-integration': SOME_LAMBDA
+            'x-amazon-apigateway-integration': define_lambda()
           }
         }
       }
@@ -265,7 +276,7 @@ describe('gateway', () => {
         sinon.assert.calledOnce(stub);
         sinon.assert.calledWith(stub, 'some-lambda', {
           some: 'content'
-        });
+        }, {}, sinon.match.func);
         done();
       });
   });
@@ -282,7 +293,7 @@ describe('gateway', () => {
                 type: 'object'
               }
             }],
-            'x-amazon-apigateway-integration': SOME_LAMBDA
+            'x-amazon-apigateway-integration': define_lambda()
           }
         }
       }
@@ -300,7 +311,7 @@ describe('gateway', () => {
           throw err;
         }
         sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {});
+        sinon.assert.calledWith(stub, 'some-lambda', {}, {}, sinon.match.func);
         done();
       });
   });
@@ -314,7 +325,7 @@ describe('gateway', () => {
             parameters: [{
               in: 'body'
             }],
-            'x-amazon-apigateway-integration': SOME_LAMBDA
+            'x-amazon-apigateway-integration': define_lambda()
           }
         }
       }
@@ -328,7 +339,7 @@ describe('gateway', () => {
       .set('accept', 'application/json')
       .send({ some: 'content' })
       .expect(JSON.stringify({
-        errorMessage: 'Missing schema in body parameter'
+        errorMessage: 'Missing schema in body parameter for POST /foo'
       }))
       .expect(500, (err) => {
         if (err) {
@@ -350,7 +361,8 @@ describe('gateway', () => {
               in: 'query',
               type: 'string'
             }],
-            'x-amazon-apigateway-integration': SOME_LAMBDA
+            'x-amazon-apigateway-integration':
+              define_lambda('{"some":"$input.params(\'some\')"}')
           }
         }
       }
@@ -368,7 +380,7 @@ describe('gateway', () => {
         sinon.assert.calledOnce(stub);
         sinon.assert.calledWith(stub, 'some-lambda', {
           some: 'query'
-        });
+        }, {}, sinon.match.func);
         done();
       });
   });
@@ -390,7 +402,7 @@ describe('gateway', () => {
                 }
               }
             }],
-            'x-amazon-apigateway-integration': SOME_LAMBDA
+            'x-amazon-apigateway-integration': define_lambda()
           }
         }
       }
@@ -409,7 +421,7 @@ describe('gateway', () => {
         sinon.assert.calledOnce(stub);
         sinon.assert.calledWith(stub, 'some-lambda', {
           some: 'content'
-        });
+        }, {}, sinon.match.func);
         done();
       });
 

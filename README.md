@@ -26,7 +26,7 @@ gateway_server.listen(1337);
 
 ## Events
 
-- `lambda(name, event, callback)`: When a lambda integration should be invoked.
-  See [@studio/lambda][] for a custom Lambda execution environment.
+- `lambda(name, event, context, callback)`: When a lambda integration should be
+  invoked. See [@studio/lambda][] for a custom Lambda execution environment.
 
 [@studio/lambda]: https://github.com/javascript-studio/studio-lambda

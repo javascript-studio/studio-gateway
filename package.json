@@ -24,5 +24,10 @@
     "mocha": "^3.0.0",
     "sinon": "^1.17.4",
     "supertest": "^2.0.0"
+  },
+  "dependencies": {
+    "js-string-escape": "^1.0.1",
+    "jsonpath": "^0.2.6",
+    "velocityjs": "^0.8.5"
   }
 }
