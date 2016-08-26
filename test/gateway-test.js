@@ -430,7 +430,43 @@ describe('gateway', () => {
         }, {}, sinon.match.func);
         done();
       });
+  });
 
+  it('maps path parameter', (done) => {
+    swag({
+      paths: {
+        '/path/{this}/{that}': {
+          get: {
+            responses: { 200: {} },
+            parameters: [{
+              name: 'thingy',
+              in: 'path',
+              type: 'string'
+            }],
+            'x-amazon-apigateway-integration': define_lambda(
+              '{"this":"$input.params(\'this\')",'
+              + '"that":"$input.params(\'that\')"}')
+          }
+        }
+      }
+    });
+    create();
+    const stub = sinon.stub().yields(null, {});
+    server.on('lambda', stub);
+
+    supertest(server)
+      .get('/path/foo/bar')
+      .expect(200, (err) => {
+        if (err) {
+          throw err;
+        }
+        sinon.assert.calledOnce(stub);
+        sinon.assert.calledWith(stub, 'some-lambda', {
+          this: 'foo',
+          that: 'bar'
+        }, {}, sinon.match.func);
+        done();
+      });
   });
 
   it('uses response template', (done) => {
