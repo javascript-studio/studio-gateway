@@ -2,18 +2,18 @@
 'use strict';
 
 const assert = require('assert');
-const templates = require('../lib/templates');
+const { renderTemplate } = require('../lib/templates');
 
 describe('templates.render', () => {
 
   it('$input.body', () => {
-    const res = templates.render('$input.body', {}, {}, {}, '{"raw":"body"}');
+    const res = renderTemplate('$input.body', {}, {}, {}, '{"raw":"body"}');
 
     assert.equal(res, '{"raw":"body"}');
   });
 
   it('$input.params()', () => {
-    const res = templates.render('$input.params()', {}, {
+    const res = renderTemplate('$input.params()', {}, {
       params: { a: 'a' },
       query: { b: 'b' },
       headers: { c: 'c' }
@@ -23,7 +23,7 @@ describe('templates.render', () => {
   });
 
   it('$input.params(x) path', () => {
-    const res = templates.render('$input.params("x")', {}, {
+    const res = renderTemplate('$input.params("x")', {}, {
       params: { x: 'param' },
       query: { x: 'query' },
       headers: { x: 'header' }
@@ -33,7 +33,7 @@ describe('templates.render', () => {
   });
 
   it('$input.params(x) query', () => {
-    const res = templates.render('$input.params("x")', {}, {
+    const res = renderTemplate('$input.params("x")', {}, {
       params: {},
       query: { x: 'query' },
       headers: { x: 'header' }
@@ -43,7 +43,7 @@ describe('templates.render', () => {
   });
 
   it('$input.params(x) headers', () => {
-    const res = templates.render('$input.params("x")', {}, {
+    const res = renderTemplate('$input.params("x")', {}, {
       params: {},
       query: {},
       headers: { x: 'header' }
@@ -53,7 +53,7 @@ describe('templates.render', () => {
   });
 
   it('$input.json(path)', () => {
-    const res = templates.render('$input.json("$.x")', {}, {}, {
+    const res = renderTemplate('$input.json("$.x")', {}, {}, {
       x: { y: 'test' }
     });
 
@@ -61,7 +61,7 @@ describe('templates.render', () => {
   });
 
   it('$input.path(path)', () => {
-    const res = templates.render('$input.path("$.x").size()', {}, {}, {
+    const res = renderTemplate('$input.path("$.x").size()', {}, {}, {
       x: 'test'
     });
 
@@ -69,38 +69,38 @@ describe('templates.render', () => {
   });
 
   it('$util.escapeJavaScript(str)', () => {
-    const res = templates.render('$util.escapeJavaScript(\'{"x":"test"}\')',
+    const res = renderTemplate('$util.escapeJavaScript(\'{"x":"test"}\')',
       {}, {});
 
     assert.equal(res, '{\\"x\\":\\"test\\"}');
   });
 
   it('$util.parseJson(str)', () => {
-    const res = templates.render('$util.parseJson(\'{"x":"test"}\').x', {}, {});
+    const res = renderTemplate('$util.parseJson(\'{"x":"test"}\').x', {}, {});
 
     assert.equal(res, 'test');
   });
 
   it('$util.urlEncode(str)', () => {
-    const res = templates.render('$util.urlEncode(\'a b\')', {}, {});
+    const res = renderTemplate('$util.urlEncode(\'a b\')', {}, {});
 
     assert.equal(res, 'a%20b');
   });
 
   it('$util.urlDecode(str)', () => {
-    const res = templates.render('$util.urlDecode(\'a%20b\')', {}, {});
+    const res = renderTemplate('$util.urlDecode(\'a%20b\')', {}, {});
 
     assert.equal(res, 'a b');
   });
 
   it('$util.base64Encode(str)', () => {
-    const res = templates.render('$util.base64Encode(\'test\')', {}, {});
+    const res = renderTemplate('$util.base64Encode(\'test\')', {}, {});
 
     assert.equal(res, 'dGVzdA==');
   });
 
   it('$util.base64Decode(str)', () => {
-    const res = templates.render('$util.base64Decode(\'dGVzdA==\')', {}, {});
+    const res = renderTemplate('$util.base64Decode(\'dGVzdA==\')', {}, {});
 
     assert.equal(res, 'test');
   });

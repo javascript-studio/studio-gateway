@@ -439,7 +439,11 @@ describe('gateway', () => {
           get: {
             responses: { 200: {} },
             parameters: [{
-              name: 'thingy',
+              name: 'this',
+              in: 'path',
+              type: 'string'
+            }, {
+              name: 'that',
               in: 'path',
               type: 'string'
             }],
