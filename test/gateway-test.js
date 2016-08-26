@@ -205,7 +205,7 @@ describe('gateway', () => {
 
     supertest(server)
       .post('/foo')
-      .expect('{"code":"E_FOO"}')
+      .expect('{"errorMessage":{"code":"E_FOO"}}')
       .expect(500, done);
   });
 
