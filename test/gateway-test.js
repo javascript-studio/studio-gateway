@@ -6,15 +6,21 @@ const supertest = require('supertest');
 const sinon = require('sinon');
 const gateway = require('..');
 
-function define_lambda(template = '$input.json(\'$\')') {
+function define_lambda(req_template = '$input.json(\'$\')', res_template) {
+  const responseTemplates = res_template ? {
+    'application/json': res_template
+  } : null;
   return {
     type: 'aws',
     uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
     requestTemplates: {
-      'application/json': template
+      'application/json': req_template
     },
     responses: {
-      default: { statusCode: '200' }
+      default: {
+        statusCode: '200',
+        responseTemplates
+      }
     }
   };
 }
@@ -424,6 +430,29 @@ describe('gateway', () => {
         }, {}, sinon.match.func);
         done();
       });
+
+  });
+
+  it('uses response template', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            responses: { 200: {} },
+            'x-amazon-apigateway-integration': define_lambda('{}',
+              '{"wrapped":$input.json(\'$\')}')
+          }
+        }
+      }
+    });
+    create();
+    const stub = sinon.stub().yields(null, { some: 'response' });
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .expect(JSON.stringify({ wrapped: { some: 'response' } }))
+      .expect(200, done);
 
   });
 
