@@ -3,8 +3,16 @@
 
 const fs = require('fs');
 const supertest = require('supertest');
+const assert = require('assert');
 const sinon = require('sinon');
 const gateway = require('..');
+
+const minimal_mock = {
+  responses: { 200: {} },
+  'x-amazon-apigateway-integration': {
+    type: 'mock'
+  }
+};
 
 function define_lambda(req_template = '$input.json(\'$\')', res_template) {
   const responseTemplates = res_template ? {
@@ -66,19 +74,9 @@ describe('gateway', () => {
   it('returns 404 for unknown method', (done) => {
     swag({
       paths: {
-        '/foo': { post: {} }
-      }
-    });
-
-    supertest(create())
-      .get('/foo')
-      .expect(404, done);
-  });
-
-  it('returns 404 if aws integration is missing', (done) => {
-    swag({
-      paths: {
-        '/foo': { get: {} }
+        '/foo': {
+          post: minimal_mock
+        }
       }
     });
 
@@ -322,7 +320,7 @@ describe('gateway', () => {
       });
   });
 
-  it('fails if body has no schema', (done) => {
+  it('throws if body has no schema', () => {
     swag({
       paths: {
         '/foo': {
@@ -336,24 +334,10 @@ describe('gateway', () => {
         }
       }
     });
-    create();
-    const stub = sinon.stub().yields(null, {});
-    server.on('lambda', stub);
 
-    supertest(server)
-      .post('/foo')
-      .set('accept', 'application/json')
-      .send({ some: 'content' })
-      .expect(JSON.stringify({
-        errorMessage: 'Missing schema in body parameter for POST /foo'
-      }))
-      .expect(500, (err) => {
-        if (err) {
-          throw err;
-        }
-        sinon.assert.notCalled(stub);
-        done();
-      });
+    assert.throws(() => {
+      create();
+    }, /^Error: \[POST \/foo\] Missing schema in body parameter$/);
   });
 
   it('maps query to parameter', (done) => {

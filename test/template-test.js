@@ -4,7 +4,7 @@
 const assert = require('assert');
 const { renderTemplate } = require('../lib/templates');
 
-describe('templates.render', () => {
+describe('renderTemplate', () => {
 
   it('$input.body', () => {
     const res = renderTemplate('$input.body', {}, {}, {}, '{"raw":"body"}');
