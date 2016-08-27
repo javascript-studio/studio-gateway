@@ -1,7 +1,7 @@
 # JavaScript Studio Gateway
 
-A custom [Swagger][] interpreter with [AWS Lambda integration][aws-int], for
-local API Gateway testing.
+A custom [Swagger][] server and compiler with [AWS Lambda
+and mock integration][aws-int], for local API Gateway testing.
 
 ## Features
 
@@ -12,6 +12,7 @@ local API Gateway testing.
 - ✅  Response headers
 - ✅  AWS Lambda integration
 - ✅  AWS Mock integration
+- ✅  Swagger `$ref` to external files - compiles to single AWS compatible file
 
 ## Usage
 
@@ -38,6 +39,21 @@ gateway_server.listen(1337);
 
 - `lambda(name, event, context, callback)`: When a lambda integration should be
   invoked. See [@studio/lambda][] for a custom Lambda execution environment.
+
+## Swagger command
+
+This module ships with a `swagger` command to compile a `swagger.json` file with
+references to other files into a single AWS compatible file.
+
+Use in npm scripts like this:
+
+```json
+{
+  "scripts": {
+    "swagger:prod": "swagger > target/swagger-prod.json"
+  }
+}
+```
 
 [Swagger]: http://swagger.io
 [aws-int]: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions.html

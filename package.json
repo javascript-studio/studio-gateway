@@ -4,6 +4,9 @@
   "description": "JavaScript Studio Gateway",
   "author": "Maximilian Antoni <max@javascript.studio> (http://javascript.studio)",
   "main": "lib/gateway.js",
+  "bin": {
+    "swagger": "bin/swagger.js"
+  },
   "scripts": {
     "lint": "eslint .",
     "test": "mocha",
