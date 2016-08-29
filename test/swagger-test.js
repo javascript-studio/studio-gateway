@@ -22,17 +22,17 @@ describe('loadSwagger', () => {
   it('returns parsed content of given file', () => {
     fs.readFileSync.returns('{"some":"stuff"}');
 
-    const json = swagger.loadSwagger('some/file.json');
+    const json = swagger.loadSwagger({ file: 'some/file.json' });
 
     assert.deepEqual(json, { some: 'stuff' });
     sinon.assert.calledOnce(fs.readFileSync);
     sinon.assert.calledWith(fs.readFileSync, 'some/file.json');
   });
 
-  it('reads default file if undefined is given', () => {
+  it('reads default file if no file is given', () => {
     fs.readFileSync.returns('{}');
 
-    swagger.loadSwagger(undefined);
+    swagger.loadSwagger();
 
     sinon.assert.calledOnce(fs.readFileSync);
     sinon.assert.calledWith(fs.readFileSync, 'swagger.json');
@@ -168,6 +168,24 @@ describe('loadSwagger', () => {
     assert.doesNotThrow(() => {
       swagger.loadSwagger();
     });
+  });
+
+  it('replaces environment variables', () => {
+    process.env.test_env_1 = 'abc';
+    process.env.test_env_2 = 'def';
+    fs.readFileSync.returns('{"some":"${test_env_1}/${test_env_2}"}');
+
+    const json = swagger.loadSwagger({ file: 'some/file.json' });
+
+    assert.deepEqual(json, { some: 'abc/def' });
+  });
+
+  it('throws if an environment variable is not defined', () => {
+    fs.readFileSync.returns('{"some":"${test_unknown_variable}"}');
+
+    assert.throws(() => {
+      swagger.loadSwagger();
+    }, /Error: Missing environment variable "test_unknown_variable"$/);
   });
 
 });

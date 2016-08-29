@@ -14,13 +14,17 @@ const minimal_mock = {
   }
 };
 
+const LAMBDA_URI = 'arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/'
+  + 'functions/arn:aws:lambda:eu-central-1:123456789:function:'
+  + 'studio_some-lambda:current/invocations';
+
 function define_lambda(req_template = '$input.json(\'$\')', res_template) {
   const responseTemplates = res_template ? {
     'application/json': res_template
   } : null;
   return {
     type: 'aws',
-    uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
+    uri: LAMBDA_URI,
     requestTemplates: {
       'application/json': req_template
     },
@@ -115,36 +119,6 @@ describe('gateway', () => {
       .expect(200, done);
   });
 
-  it('replaces __ORIGIN__ with request origin', (done) => {
-    swag({
-      paths: {
-        '/foo': {
-          get: {
-            responses: { 200: {} },
-            'x-amazon-apigateway-integration': {
-              type: 'mock',
-              responses: {
-                default: {
-                  statusCode: '200',
-                  responseParameters: {
-                    'method.response.header.x-foo-bar': '"__ORIGIN__"'
-                  },
-                  responseTemplate: '{}'
-                }
-              }
-            }
-          }
-        }
-      }
-    });
-
-    supertest(create())
-      .get('/foo')
-      .set('origin', 'http://javascript.studio')
-      .expect('x-foo-bar', 'http://javascript.studio')
-      .expect(200, done);
-  });
-
   it('emits "lambda" event with empty body', (done) => {
     swag({
       paths: {
@@ -185,7 +159,7 @@ describe('gateway', () => {
             responses: { 200: {} },
             'x-amazon-apigateway-integration': {
               type: 'aws',
-              uri: '__APIGATEWAY__/__LAMBDA__some-lambda:current/invocations',
+              uri: LAMBDA_URI,
               requestTemplates: {
                 'application/json': '{}'
               },

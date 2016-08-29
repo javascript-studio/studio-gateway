@@ -33,6 +33,7 @@ gateway_server.listen(1337);
 - `gateway_server = gateway.create([options])`: Returns a new gateway server
   for the given options.
     - `swagger_file`: The swagger file to read. Defaults to `swagger.json`.
+    - `swagger_env`: The [dotenv][] config to read.
 - `gateway_server.listen(port[, callback])`: Bind the server to the given port.
 
 ## Events
@@ -50,11 +51,25 @@ Use in npm scripts like this:
 ```json
 {
   "scripts": {
-    "swagger:prod": "swagger > target/swagger-prod.json"
+    "swagger:prod": "swagger -o target/swagger-prod.json"
   }
 }
 ```
 
+The `swagger` optionally loads the [dotenv][] module and replaces environment
+`${variables}`.
+
+These options are supported:
+
+- `-f, --file`: Sets the name of the swagger file. Defaults to `swagger.json`.
+- `-e, --env`: Sets the path to a `dotenv` config file.
+- `-o, --outfile`: Defines the output file to write to. If not specified, the
+  result is printed to standard out.
+
+Note that all environment variables can be used. When using npm scripts as
+shown above, you can also do things like `${npm_package_version}`.
+
 [Swagger]: http://swagger.io
 [aws-int]: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions.html
 [@studio/lambda]: https://github.com/javascript-studio/studio-lambda
+[dotenv]: https://www.npmjs.com/package/dotenv

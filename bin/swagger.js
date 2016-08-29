@@ -1,11 +1,25 @@
 #!/usr/bin/env node
 'use strict';
 
-// TODO support -f, --file {swagger-file}
-// TODO support -e, --env {env-file} # like localenvify
-// TODO support -o, --outfile {file} # and mkdirp the path
+const argv = require('minimist')(process.argv.slice(2), {
+  alias: {
+    env: 'e',
+    file: 'f',
+    outfile: 'o'
+  }
+});
 
 const { loadSwagger } = require('../lib/swagger');
 
-const json = loadSwagger();
-console.log(JSON.stringify(json, null, '  '));
+const json = loadSwagger(argv);
+const str = JSON.stringify(json, null, '  ');
+
+if (argv.outfile) {
+  require('fs').writeFile(argv.outfile, str, (err) => {
+    if (err) {
+      throw err;
+    }
+  });
+} else {
+  console.log(str);
+}
