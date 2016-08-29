@@ -38,7 +38,7 @@ describe('loadSwagger', () => {
     sinon.assert.calledWith(fs.readFileSync, 'swagger.json');
   });
 
-  it('replaces external $ref with internal $ref', () => {
+  it('replaces external $ref with json', () => {
     fs.readFileSync.withArgs('swagger.json').returns(
       '{"some":{"$ref":"other/file.json"}}'
     );
@@ -48,14 +48,7 @@ describe('loadSwagger', () => {
 
     assert.deepEqual(json, {
       some: {
-        $ref: '#/definitions/_external/other-file'
-      },
-      definitions: {
-        _external: {
-          'other-file': {
-            other: 'content'
-          }
-        }
+        other: 'content'
       }
     });
   });
@@ -73,88 +66,8 @@ describe('loadSwagger', () => {
 
     assert.deepEqual(json, {
       some: {
-        $ref: '#/definitions/_external/other-file'
-      },
-      definitions: {
-        _external: {
-          'other-file': {
-            other: {
-              $ref: '#/definitions/_external/more-files'
-            }
-          },
-          'more-files': {
-            deep: true
-          }
-        }
-      }
-    });
-  });
-
-  it('flatens definitions', () => {
-    fs.readFileSync.withArgs('swagger.json').returns(
-      '{"some":{"$ref":"other/file.json"}}'
-    );
-    fs.readFileSync.withArgs('other/file.json').returns(
-      '{"definitions":{"some":"model"}}');
-
-    const json = swagger.loadSwagger();
-
-    assert.deepEqual(json, {
-      some: {
-        $ref: '#/definitions/_external/other-file'
-      },
-      definitions: {
-        _external: {
-          'other-file': {}
-        },
-        some: 'model'
-      }
-    });
-  });
-
-  it('does not replace root definitions', () => {
-    fs.readFileSync.withArgs('swagger.json').returns(
-      '{"some":{"$ref":"other/file.json"},"definitions":{"test":42}}'
-    );
-    fs.readFileSync.withArgs('other/file.json').returns(
-      '{"definitions":{"some":"model"}}');
-
-    const json = swagger.loadSwagger();
-
-    assert.deepEqual(json, {
-      some: {
-        $ref: '#/definitions/_external/other-file'
-      },
-      definitions: {
-        _external: {
-          'other-file': {}
-        },
-        some: 'model',
-        test: 42
-      }
-    });
-  });
-
-  it('does not read same ref twice', () => {
-    fs.readFileSync.withArgs('swagger.json').returns(
-      '{"some":{"$ref":"other/file.json"},"more":{"$ref":"other/file.json"}}'
-    );
-    fs.readFileSync.withArgs('other/file.json').returns('{}');
-
-    const json = swagger.loadSwagger();
-
-    sinon.assert.calledTwice(fs.readFileSync);
-    // ... but it does replace the reference twice!
-    assert.deepEqual(json, {
-      some: {
-        $ref: '#/definitions/_external/other-file'
-      },
-      more: {
-        $ref: '#/definitions/_external/other-file'
-      },
-      definitions: {
-        _external: {
-          'other-file': {}
+        other: {
+          deep: true
         }
       }
     });
