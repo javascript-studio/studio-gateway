@@ -1,5 +1,18 @@
 # Changes
 
+## 1.2.0
+
+Any `${variables}` in the `swagger.json` is now replaced with the corresponding
+environment variable. If a variable is not defined, an exception is thrown. The
+new `swagger_env` option allows to define a `dotenv` file to be loaded.
+
+A `swagger` command was introduced to compile `swagger.json` into single file.
+These flags are available for the new `swagger` command:
+
+- `--env` loads the given dotenv config file
+- `--file` allows to override the default swagger.json file
+- `--outfile` write to the given file instead of standard out
+
 ## 1.1.0
 
 __Features:__
