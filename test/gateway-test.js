@@ -451,7 +451,32 @@ describe('gateway', () => {
       .post('/foo')
       .expect(JSON.stringify({ wrapped: { some: 'response' } }))
       .expect(200, done);
+  });
 
+  it('throws error with generated request template if JSON error', (done) => {
+    sandbox.stub(console, 'error');
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            responses: { 200: {} },
+            'x-amazon-apigateway-integration': define_lambda('no json', '{}')
+          }
+        }
+      }
+    });
+    create();
+
+    supertest(server)
+      .post('/foo')
+      .expect(JSON.stringify({
+        errorMessage: 'Failed to parse request \'no json\': '
+          + 'Unexpected token o in JSON at position 1'
+      }))
+      .expect(500, (err) => {
+        sinon.assert.calledOnce(console.error);
+        done(err);
+      });
   });
 
 });
