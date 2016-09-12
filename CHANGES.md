@@ -1,5 +1,9 @@
 # Changes
 
+## 1.2.1
+
+- Handle `JSON.parse` exception for request templates
+
 ## 1.2.0
 
 Any `${variables}` in the `swagger.json` is now replaced with the corresponding

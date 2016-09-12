@@ -1,6 +1,6 @@
 {
   "name": "@studio/gateway",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "JavaScript Studio Gateway",
   "author": "Maximilian Antoni <max@javascript.studio> (http://javascript.studio)",
   "main": "lib/gateway.js",
