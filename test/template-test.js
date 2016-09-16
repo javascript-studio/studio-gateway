@@ -6,6 +6,16 @@ const { renderTemplate } = require('../lib/templates');
 
 describe('renderTemplate', () => {
 
+  it('$context.authorizer.principalId', () => {
+    const res = renderTemplate('$context.authorizer.principalId', {
+      authorizer: {
+        principalId: 'User123'
+      }
+    }, {}, {}, '');
+
+    assert.equal(res, 'User123');
+  });
+
   it('$input.body', () => {
     const res = renderTemplate('$input.body', {}, {}, {}, '{"raw":"body"}');
 
