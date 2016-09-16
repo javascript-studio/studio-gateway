@@ -1,5 +1,10 @@
 # Changes
 
+## 1.3.0
+
+- Support custom security Lambda functions
+- Fix template `$context` access
+
 ## 1.2.1
 
 - Handle `JSON.parse` exception for request templates
