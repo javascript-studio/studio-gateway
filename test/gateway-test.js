@@ -179,7 +179,41 @@ describe('gateway', () => {
 
     supertest(server)
       .post('/foo')
-      .expect('{"errorMessage":{"code":"E_FOO"}}')
+      .expect('{"errorMessage":"{\\"code\\":\\"E_FOO\\"}"}')
+      .expect(500, done);
+  });
+
+  it('uses matching error response template to extract json', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            responses: { 200: {} },
+            'x-amazon-apigateway-integration': {
+              type: 'aws',
+              uri: lambdaUri(),
+              requestTemplates: {
+                'application/json': '{}'
+              },
+              responses: {
+                '.*"code":"E_*': {
+                  statusCode: '500',
+                  responseTemplates: {
+                    'application/json': '$input.path(\'$.errorMessage\')[0]'
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+    create();
+    server.on('lambda', sinon.stub().yields('{"code":"E_FOO"}'));
+
+    supertest(server)
+      .post('/foo')
+      .expect('{"code":"E_FOO"}')
       .expect(500, done);
   });
 
