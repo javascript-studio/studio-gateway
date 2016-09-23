@@ -1,5 +1,10 @@
 # Changes
 
+## 1.3.1
+
+This fix makes error returned by Lambda functions behave more like the AWS API
+Gateway implementation.
+
 ## 1.3.0
 
 - Support custom security Lambda functions
