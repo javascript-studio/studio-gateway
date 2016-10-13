@@ -1,5 +1,11 @@
 # Changes
 
+## 1.4.0
+
+- Swagger models now allow nested objects. However, they're not recursively
+  validated yet.
+- Fix swagger `$ref` within arrays and within `$ref`ed files.
+
 ## 1.3.1
 
 This fix makes error returned by Lambda functions behave more like the AWS API
