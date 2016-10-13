@@ -46,6 +46,7 @@ describe('gateway', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
+    sandbox.stub(console, 'info');
     swagger = sandbox.stub(fs, 'readFileSync').withArgs('swagger.json');
   });
 
@@ -295,6 +296,51 @@ describe('gateway', () => {
       });
   });
 
+  it('maps nested body json to parameter', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            responses: { 200: {} },
+            parameters: [{
+              in: 'body',
+              schema: {
+                type: 'object',
+                properties: {
+                  some: {
+                    type: 'object',
+                    properties: {
+                      thing: {
+                        type: 'string'
+                      }
+                    }
+                  }
+                }
+              }
+            }],
+            'x-amazon-apigateway-integration': define_lambda()
+          }
+        }
+      }
+    });
+    create();
+    const stub = sinon.stub().yields(null, {});
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('accept', 'application/json')
+      .send({ some: { thing: 'content' } })
+      .expect(200, (err) => {
+        assert.ifError(err);
+        sinon.assert.calledOnce(stub);
+        sinon.assert.calledWith(stub, 'some-lambda', {
+          some: { thing: 'content' }
+        }, {}, sinon.match.func);
+        done();
+      });
+  });
+
   it('does not map body json to parameter if not in schema', (done) => {
     swag({
       paths: {
@@ -506,11 +552,11 @@ describe('gateway', () => {
     supertest(server)
       .post('/foo')
       .expect(JSON.stringify({
-        errorMessage: 'Failed to parse request \'no json\': '
+        errorMessage: 'Failed to parse event \'no json\': '
           + 'Unexpected token o in JSON at position 1'
       }))
       .expect(500, (err) => {
-        sinon.assert.calledOnce(console.error);
+        sinon.assert.calledTwice(console.info);
         done(err);
       });
   });
