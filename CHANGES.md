@@ -1,5 +1,9 @@
 # Changes
 
+## 1.4.1
+
+- Fix `$input.path` function to return first array element
+
 ## 1.4.0
 
 - Swagger models now allow nested objects. However, they're not recursively
