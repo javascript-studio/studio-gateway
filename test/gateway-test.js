@@ -200,7 +200,7 @@ describe('gateway', () => {
                 '.*"code":"E_*': {
                   statusCode: '500',
                   responseTemplates: {
-                    'application/json': '$input.path(\'$.errorMessage\')[0]'
+                    'application/json': '$input.path(\'$.errorMessage\')'
                   }
                 }
               }

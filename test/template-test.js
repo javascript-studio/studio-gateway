@@ -71,11 +71,11 @@ describe('renderTemplate', () => {
   });
 
   it('$input.path(path)', () => {
-    const res = renderTemplate('$input.path("$.x").size()', {}, {}, {
+    const res = renderTemplate('$input.path("$.x")', {}, {}, {
       x: 'test'
     });
 
-    assert.equal(res, '1');
+    assert.equal(res, 'test');
   });
 
   it('$util.escapeJavaScript(str)', () => {
