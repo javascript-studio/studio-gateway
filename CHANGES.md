@@ -1,5 +1,10 @@
 # Changes
 
+## 1.4.2
+
+- Look for `content-type` header instead of `accept`
+- Handle invalid request exceptions
+
 ## 1.4.1
 
 - Fix `$input.path` function to return first array element
