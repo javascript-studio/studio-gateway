@@ -552,11 +552,12 @@ describe('gateway', () => {
     supertest(server)
       .post('/foo')
       .expect(JSON.stringify({
-        errorMessage: 'Failed to parse event \'no json\': '
-          + 'Unexpected token o in JSON at position 1'
+        errorMessage: 'Internal server error'
       }))
       .expect(500, (err) => {
         sinon.assert.calledTwice(console.info);
+        sinon.assert.calledWithMatch(console.info, 'Failed to parse event \'no'
+          + ' json\': SyntaxError: Unexpected token o in JSON at position 1');
         done(err);
       });
   });
@@ -701,6 +702,40 @@ describe('gateway', () => {
       .set('Authorization', 'something else')
       .expect('{"errorMessage":"Unauthorized"}')
       .expect(403, (err) => {
+        if (err) {
+          throw err;
+        }
+        sinon.assert.notCalled(stub);
+        done();
+      });
+  });
+
+  it('responds with 400 if required parameter is missing', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          get: {
+            responses: { 200: {} },
+            parameters: [{
+              name: 'some',
+              in: 'query',
+              type: 'string',
+              required: true
+            }],
+            'x-amazon-apigateway-integration': define_lambda()
+          }
+        }
+      }
+    });
+    create();
+    const stub = sinon.stub();
+    server.on('lambda', stub);
+
+    supertest(server)
+      .get('/foo')
+      .set('accept', 'application/json')
+      .expect('{"errorMessage":"Invalid request"}')
+      .expect(400, (err) => {
         if (err) {
           throw err;
         }

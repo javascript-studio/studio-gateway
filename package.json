@@ -2,7 +2,7 @@
   "name": "@studio/gateway",
   "version": "1.4.1",
   "description": "JavaScript Studio Gateway",
-  "author": "Maximilian Antoni <max@javascript.studio> (http://javascript.studio)",
+  "author": "Maximilian Antoni <max@javascript.studio>",
   "main": "lib/gateway.js",
   "bin": {
     "swagger": "bin/swagger.js"
