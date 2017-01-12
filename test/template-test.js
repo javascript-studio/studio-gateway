@@ -78,6 +78,22 @@ describe('renderTemplate', () => {
     assert.equal(res, 'test');
   });
 
+  it('quoted $util.path(path) with string value', () => {
+    // Use this notation for optional body values:
+    const res = renderTemplate('{"x":"$input.path(\'$.y\')"}',
+      {}, {}, { y: 'y' });
+
+    assert.equal(res, '{"x":"y"}');
+  });
+
+  it('quoted $util.path(path) with undefined', () => {
+    // Use this notation for optional body values:
+    const res = renderTemplate('{"x":"$input.path(\'$.y\')"}',
+      {}, {}, {});
+
+    assert.equal(res, '{"x":""}');
+  });
+
   it('$util.escapeJavaScript(str)', () => {
     const res = renderTemplate('$util.escapeJavaScript(\'{"x":"test"}\')',
       {}, {});
