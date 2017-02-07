@@ -1,5 +1,9 @@
 # Changes
 
+## 1.5.0
+
+- Support boolean parameters
+
 ## 1.4.2
 
 - Look for `content-type` header instead of `accept`
