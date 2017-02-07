@@ -396,7 +396,7 @@ describe('gateway', () => {
     }, /^Error: \[POST \/foo\] Missing schema in body parameter$/);
   });
 
-  it('maps query to parameter', (done) => {
+  it('maps query to parameter (string)', (done) => {
     swag({
       paths: {
         '/foo': {
@@ -426,6 +426,41 @@ describe('gateway', () => {
         sinon.assert.calledOnce(stub);
         sinon.assert.calledWith(stub, 'some-lambda', {
           some: 'query'
+        }, {}, sinon.match.func);
+        done();
+      });
+  });
+
+  it('maps query to parameter (boolean)', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          get: {
+            responses: { 200: {} },
+            parameters: [{
+              name: 'some',
+              in: 'query',
+              type: 'boolean'
+            }],
+            'x-amazon-apigateway-integration':
+              define_lambda('{"some":$input.params(\'some\')}')
+          }
+        }
+      }
+    });
+    create();
+    const stub = sinon.stub().yields(null, {});
+    server.on('lambda', stub);
+
+    supertest(server)
+      .get('/foo?some=1')
+      .expect(200, (err) => {
+        if (err) {
+          throw err;
+        }
+        sinon.assert.calledOnce(stub);
+        sinon.assert.calledWith(stub, 'some-lambda', {
+          some: true
         }, {}, sinon.match.func);
         done();
       });
