@@ -1,5 +1,9 @@
 # Changes
 
+## 1.6.1
+
+- Reduce duplication in log message
+
 ## 1.6.0
 
 - Use `@studio/log`
