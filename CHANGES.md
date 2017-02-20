@@ -1,5 +1,9 @@
 # Changes
 
+## 1.6.0
+
+- Use `@studio/log`
+
 ## 1.5.0
 
 - Support boolean parameters
