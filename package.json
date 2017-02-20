@@ -20,6 +20,14 @@
   "eslintConfig": {
     "extends": "@studio"
   },
+  "dependencies": {
+    "@studio/log": "^1.0.2",
+    "dotenv": "^2.0.0",
+    "js-string-escape": "^1.0.1",
+    "jsonpath": "^0.2.6",
+    "minimist": "^1.2.0",
+    "velocityjs": "^0.8.5"
+  },
   "devDependencies": {
     "@studio/changes": "^1.0.2",
     "@studio/eslint-config": "^1.0.0",
@@ -27,12 +35,5 @@
     "mocha": "^3.0.0",
     "sinon": "^1.17.4",
     "supertest": "^2.0.0"
-  },
-  "dependencies": {
-    "dotenv": "^2.0.0",
-    "js-string-escape": "^1.0.1",
-    "jsonpath": "^0.2.6",
-    "minimist": "^1.2.0",
-    "velocityjs": "^0.8.5"
   }
 }

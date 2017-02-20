@@ -5,7 +5,10 @@ const fs = require('fs');
 const supertest = require('supertest');
 const assert = require('assert');
 const sinon = require('sinon');
+const logger = require('@studio/log');
 const gateway = require('..');
+
+const log = logger('API Gateway');
 
 const minimal_mock = {
   responses: { 200: {} },
@@ -46,7 +49,7 @@ describe('gateway', () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(console, 'info');
+    sandbox.stub(log, 'error');
     swagger = sandbox.stub(fs, 'readFileSync').withArgs('swagger.json');
   });
 
@@ -571,7 +574,6 @@ describe('gateway', () => {
   });
 
   it('throws error with generated request template if JSON error', (done) => {
-    sandbox.stub(console, 'error');
     swag({
       paths: {
         '/foo': {
@@ -590,9 +592,12 @@ describe('gateway', () => {
         errorMessage: 'Internal server error'
       }))
       .expect(500, (err) => {
-        sinon.assert.calledTwice(console.info);
-        sinon.assert.calledWithMatch(console.info, 'Failed to parse event \'no'
-          + ' json\': SyntaxError: Unexpected token o in JSON at position 1');
+        sinon.assert.calledOnce(log.error);
+        sinon.assert.calledWithMatch(log.error, 'Failed to parse event', {
+          event: 'no json',
+          method: 'POST',
+          url: '/foo'
+        }, 'SyntaxError: Unexpected token o in JSON at position 1');
         done(err);
       });
   });
