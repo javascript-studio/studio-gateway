@@ -23,7 +23,7 @@ function lambdaUri(name = 'some-lambda') {
     + `studio_${name}:current/invocations`;
 }
 
-function define_lambda(req_template = '$input.json(\'$\')', res_template) {
+function defineLambda(req_template = '$input.json(\'$\')', res_template) {
   const responseTemplates = res_template ? {
     'application/json': res_template
   } : null;
@@ -131,7 +131,7 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            'x-amazon-apigateway-integration': define_lambda()
+            'x-amazon-apigateway-integration': defineLambda()
           }
         }
       }
@@ -233,7 +233,7 @@ describe('gateway', () => {
               type: 'string'
             }],
             'x-amazon-apigateway-integration':
-              define_lambda('{"auth":"$input.params(\'Authorization\')"}')
+              defineLambda('{"auth":"$input.params(\'Authorization\')"}')
           }
         }
       }
@@ -274,7 +274,7 @@ describe('gateway', () => {
                 }
               }
             }],
-            'x-amazon-apigateway-integration': define_lambda()
+            'x-amazon-apigateway-integration': defineLambda()
           }
         }
       }
@@ -321,7 +321,7 @@ describe('gateway', () => {
                 }
               }
             }],
-            'x-amazon-apigateway-integration': define_lambda()
+            'x-amazon-apigateway-integration': defineLambda()
           }
         }
       }
@@ -356,7 +356,7 @@ describe('gateway', () => {
                 type: 'object'
               }
             }],
-            'x-amazon-apigateway-integration': define_lambda()
+            'x-amazon-apigateway-integration': defineLambda()
           }
         }
       }
@@ -388,7 +388,7 @@ describe('gateway', () => {
             parameters: [{
               in: 'body'
             }],
-            'x-amazon-apigateway-integration': define_lambda()
+            'x-amazon-apigateway-integration': defineLambda()
           }
         }
       }
@@ -411,7 +411,7 @@ describe('gateway', () => {
               type: 'string'
             }],
             'x-amazon-apigateway-integration':
-              define_lambda('{"some":"$input.params(\'some\')"}')
+              defineLambda('{"some":"$input.params(\'some\')"}')
           }
         }
       }
@@ -446,7 +446,7 @@ describe('gateway', () => {
               type: 'boolean'
             }],
             'x-amazon-apigateway-integration':
-              define_lambda('{"some":$input.params(\'some\')}')
+              defineLambda('{"some":$input.params(\'some\')}')
           }
         }
       }
@@ -486,7 +486,7 @@ describe('gateway', () => {
                 }
               }
             }],
-            'x-amazon-apigateway-integration': define_lambda()
+            'x-amazon-apigateway-integration': defineLambda()
           }
         }
       }
@@ -525,7 +525,7 @@ describe('gateway', () => {
               in: 'path',
               type: 'string'
             }],
-            'x-amazon-apigateway-integration': define_lambda(
+            'x-amazon-apigateway-integration': defineLambda(
               '{"this":"$input.params(\'this\')",'
               + '"that":"$input.params(\'that\')"}')
           }
@@ -557,7 +557,7 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            'x-amazon-apigateway-integration': define_lambda('{}',
+            'x-amazon-apigateway-integration': defineLambda('{}',
               '{"wrapped":$input.json(\'$\')}')
           }
         }
@@ -579,7 +579,7 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            'x-amazon-apigateway-integration': define_lambda('no json', '{}')
+            'x-amazon-apigateway-integration': defineLambda('no json', '{}')
           }
         }
       }
@@ -611,7 +611,7 @@ describe('gateway', () => {
               JWT: []
             }],
             responses: { 200: {} },
-            'x-amazon-apigateway-integration': define_lambda(
+            'x-amazon-apigateway-integration': defineLambda(
               '{"user":"$context.authorizer.principalId"}'
             )
           }
@@ -667,7 +667,7 @@ describe('gateway', () => {
               JWT: []
             }],
             responses: { 200: {} },
-            'x-amazon-apigateway-integration': define_lambda()
+            'x-amazon-apigateway-integration': defineLambda()
           }
         }
       },
@@ -713,7 +713,7 @@ describe('gateway', () => {
               JWT: []
             }],
             responses: { 200: {} },
-            'x-amazon-apigateway-integration': define_lambda()
+            'x-amazon-apigateway-integration': defineLambda()
           }
         }
       },
@@ -762,7 +762,7 @@ describe('gateway', () => {
               type: 'string',
               required: true
             }],
-            'x-amazon-apigateway-integration': define_lambda()
+            'x-amazon-apigateway-integration': defineLambda()
           }
         }
       }
