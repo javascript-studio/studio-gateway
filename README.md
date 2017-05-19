@@ -5,14 +5,14 @@ and mock integration][aws-int], for local API Gateway testing.
 
 ## Features
 
-- ✅  Request parameters, header & query mappings
-- ✅  Request body models
-- ✅  Request-/Response Velocity templates and JSON Path queries
-- ✅  Response mappings with regular expressions
-- ✅  Response headers
-- ✅  AWS Lambda integration
-- ✅  AWS Mock integration
-- ✅  Swagger `$ref` to external files - compiles to single AWS compatible file
+- Request parameters, header & query mappings
+- Request body models
+- Request-/Response Velocity templates and JSON Path queries
+- Response mappings with regular expressions
+- Response headers
+- AWS Lambda integration
+- AWS Mock integration
+- Swagger `$ref` to external files - compiles to single AWS compatible file
 
 ## Usage
 
