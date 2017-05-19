@@ -19,26 +19,26 @@ and mock integration][aws-int], for local API Gateway testing.
 Assuming a `swagger.json` file in the current directory:
 
 ```js
-const gateway = require('@studio/gateway');
-const lambda = require('@studio/lambda');
+const Gateway = require('@studio/gateway');
+const Lambda = require('@studio/lambda');
 
-const lambda_ctrl = lambda.create();
-const gateway_server = gateway.create(lambda_ctrl)
-gateway_server.on('lambda', lambda_ctrl.invoke);
-gateway_server.listen(1337);
+const lambda = Lambda.create();
+const gateway = Gateway.create()
+gateway.on('lambda', lambda.invoke);
+gateway.listen(1337);
 ```
 
 ## API
 
-- `gateway_server = gateway.create([options])`: Returns a new gateway server
+- `gateway = Gateway.create([options])`: Returns a new gateway server
   for the given options.
     - `swagger_file`: The swagger file to read. Defaults to `swagger.json`.
     - `swagger_env`: The [dotenv][] config to read.
-- `gateway_server.listen(port[, callback])`: Bind the server to the given port.
+- `gateway.listen(port[, callback])`: Bind the server to the given port.
 
 ## Events
 
-- `lambda(name, event, context, callback)`: When a lambda integration should be
+- `lambda(name, event, context, callback)`: When a Lambda integration should be
   invoked. See [@studio/lambda][] for a custom Lambda execution environment.
 
 ## Swagger command
