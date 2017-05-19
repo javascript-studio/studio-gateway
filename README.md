@@ -1,4 +1,4 @@
-# JavaScript Studio Gateway
+# Studio Gateway
 
 A custom [Swagger][] server and compiler with [AWS Lambda
 and mock integration][aws-int], for local API Gateway testing.
