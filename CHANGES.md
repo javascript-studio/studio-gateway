@@ -1,5 +1,11 @@
 # Changes
 
+## 1.7.0
+
+- 🍏 Support array parameters
+- 📚 Shorten API documentation
+- ✨ Change internal function naming convention
+
 ## 1.6.1
 
 - Reduce duplication in log message
