@@ -344,6 +344,49 @@ describe('gateway', () => {
       });
   });
 
+  it('maps body json with array to parameter', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            responses: { 200: {} },
+            parameters: [{
+              in: 'body',
+              schema: {
+                type: 'object',
+                properties: {
+                  some: {
+                    type: 'array',
+                    items: {
+                      type: 'string'
+                    }
+                  }
+                }
+              }
+            }],
+            'x-amazon-apigateway-integration': defineLambda()
+          }
+        }
+      }
+    });
+    create();
+    const stub = sinon.stub().yields(null, {});
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('accept', 'application/json')
+      .send({ some: ['array', 'content'] })
+      .expect(200, (err) => {
+        assert.ifError(err);
+        sinon.assert.calledOnce(stub);
+        sinon.assert.calledWith(stub, 'some-lambda', {
+          some: ['array', 'content']
+        }, {}, sinon.match.func);
+        done();
+      });
+  });
+
   it('does not map body json to parameter if not in schema', (done) => {
     swag({
       paths: {
