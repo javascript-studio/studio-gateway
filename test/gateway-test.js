@@ -48,7 +48,7 @@ describe('gateway', () => {
   let server;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     sandbox.stub(log, 'error');
     swagger = sandbox.stub(fs, 'readFileSync').withArgs('swagger.json');
   });
