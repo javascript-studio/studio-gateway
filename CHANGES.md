@@ -1,5 +1,12 @@
 # Changes
 
+## 1.7.1
+
+- 🐛 Use [json-parse-better-errors][]
+- 🐛 Use `sinon.createSandbox` instead of `sinon.sandbox.create`
+
+[json-parse-better-errors]: https://github.com/zkat/json-parse-better-errors
+
 ## 1.7.0
 
 - 🍏 Support array parameters
