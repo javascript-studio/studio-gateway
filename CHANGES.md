@@ -1,5 +1,11 @@
 # Changes
 
+## 1.8.0
+
+- 🍏 Cache authorization tokens according to configured ttl
+- ✨ Update dependencies
+- 🐛 Add `--exit` option to mocha
+
 ## 1.7.1
 
 - 🐛 Use [json-parse-better-errors][]
