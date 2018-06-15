@@ -645,7 +645,7 @@ describe('gateway', () => {
       });
   });
 
-  it('invokes secured lambda', (done) => {
+  function jwtAuth() {
     swag({
       paths: {
         '/foo': {
@@ -676,6 +676,10 @@ describe('gateway', () => {
       }
     });
     create();
+  }
+
+  it('invokes secured lambda', (done) => {
+    jwtAuth();
     const stub = sinon.stub();
     stub.withArgs('some-auth').yields(null, { principalId: 'User123' });
     stub.withArgs('some-lambda').yields(null, { some: 'response' });
@@ -702,34 +706,7 @@ describe('gateway', () => {
   });
 
   it('responds with 403 if security lambda fails', (done) => {
-    swag({
-      paths: {
-        '/foo': {
-          post: {
-            security: [{
-              JWT: []
-            }],
-            responses: { 200: {} },
-            'x-amazon-apigateway-integration': defineLambda()
-          }
-        }
-      },
-      securityDefinitions: {
-        JWT: {
-          type: 'apiKey',
-          name: 'Authorization',
-          in: 'header',
-          'x-amazon-apigateway-authtype': 'custom',
-          'x-amazon-apigateway-authorizer': {
-            type: 'token',
-            authorizerUri: lambdaUri('some-auth'),
-            identityValidationExpression: '[^\\.]+\\.[^\\.]+\\.[^\\.]+',
-            authorizerResultTtlInSeconds: 3600
-          }
-        }
-      }
-    });
-    create();
+    jwtAuth();
     const stub = sinon.stub();
     stub.withArgs('some-auth').yields('Unauthorized');
     server.on('lambda', stub);
@@ -748,33 +725,7 @@ describe('gateway', () => {
   });
 
   it('responds with 403 if validation expression does not match', (done) => {
-    swag({
-      paths: {
-        '/foo': {
-          post: {
-            security: [{
-              JWT: []
-            }],
-            responses: { 200: {} },
-            'x-amazon-apigateway-integration': defineLambda()
-          }
-        }
-      },
-      securityDefinitions: {
-        JWT: {
-          type: 'apiKey',
-          name: 'Authorization',
-          in: 'header',
-          'x-amazon-apigateway-authtype': 'custom',
-          'x-amazon-apigateway-authorizer': {
-            type: 'token',
-            authorizerUri: lambdaUri('some-auth'),
-            identityValidationExpression: '[^\\.]+\\.[^\\.]+\\.[^\\.]+',
-            authorizerResultTtlInSeconds: 3600
-          }
-        }
-      }
-    });
+    jwtAuth();
     create();
     const stub = sinon.stub();
     server.on('lambda', stub);
@@ -790,6 +741,43 @@ describe('gateway', () => {
         }
         sinon.assert.notCalled(stub);
         done();
+      });
+  });
+
+  it('caches secured lambda response', (done) => {
+    jwtAuth();
+    const stub = sinon.stub();
+    stub.withArgs('some-auth').yields(null, { principalId: 'User123' });
+    stub.withArgs('some-lambda').yields(null, { some: 'response' });
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('accept', 'application/json')
+      .set('Authorization', 'Bearer abc.def.ghi')
+      .expect('{"some":"response"}')
+      .expect(200, (err) => {
+        if (err) {
+          throw err;
+        }
+        stub.resetHistory();
+
+        supertest(server)
+          .post('/foo')
+          .set('accept', 'application/json')
+          .set('Authorization', 'Bearer abc.def.ghi')
+          .expect('{"some":"response"}')
+          .expect(200, (err) => {
+            if (err) {
+              throw err;
+            }
+
+            sinon.assert.calledOnce(stub);
+            sinon.assert.calledWith(stub, 'some-lambda', {
+              user: 'User123'
+            }, {}, sinon.match.func);
+            done();
+          });
       });
   });
 
