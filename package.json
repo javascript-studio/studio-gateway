@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha",
+    "test": "mocha --exit",
     "watch": "mocha --watch",
     "posttest": "npm run lint",
     "start": "node .",
