@@ -3,8 +3,7 @@
 
 const fs = require('fs');
 const supertest = require('supertest');
-const assert = require('assert');
-const sinon = require('sinon');
+const { assert, refute, sinon } = require('@sinonjs/referee-sinon');
 const logger = require('@studio/log');
 const gateway = require('..');
 
@@ -149,8 +148,7 @@ describe('gateway', () => {
         if (err) {
           throw err;
         }
-        sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {
+        assert.calledOnceWith(stub, 'some-lambda', {
           // Empty body
         }, {}, sinon.match.func);
         done();
@@ -249,8 +247,7 @@ describe('gateway', () => {
         if (err) {
           throw err;
         }
-        sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {
+        assert.calledOnceWith(stub, 'some-lambda', {
           auth: 'Secret'
         }, {}, sinon.match.func);
         done();
@@ -291,8 +288,7 @@ describe('gateway', () => {
         if (err) {
           throw err;
         }
-        sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {
+        assert.calledOnceWith(stub, 'some-lambda', {
           some: 'content'
         }, {}, sinon.match.func);
         done();
@@ -335,9 +331,8 @@ describe('gateway', () => {
       .set('accept', 'application/json')
       .send({ some: { thing: 'content' } })
       .expect(200, (err) => {
-        assert.ifError(err);
-        sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {
+        assert.isNull(err);
+        assert.calledOnceWith(stub, 'some-lambda', {
           some: { thing: 'content' }
         }, {}, sinon.match.func);
         done();
@@ -378,9 +373,8 @@ describe('gateway', () => {
       .set('accept', 'application/json')
       .send({ some: ['array', 'content'] })
       .expect(200, (err) => {
-        assert.ifError(err);
-        sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {
+        assert.isNull(err);
+        assert.calledOnceWith(stub, 'some-lambda', {
           some: ['array', 'content']
         }, {}, sinon.match.func);
         done();
@@ -413,11 +407,8 @@ describe('gateway', () => {
       .set('accept', 'application/json')
       .send({ some: 'content' }) // provided, but ignored
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
-        sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {}, {}, sinon.match.func);
+        assert.isNull(err);
+        assert.calledOnceWith(stub, 'some-lambda', {}, {}, sinon.match.func);
         done();
       });
   });
@@ -437,7 +428,7 @@ describe('gateway', () => {
       }
     });
 
-    assert.throws(() => {
+    assert.exception(() => {
       create();
     }, /^Error: \[POST \/foo\] Missing schema in body parameter$/);
   });
@@ -466,11 +457,8 @@ describe('gateway', () => {
     supertest(server)
       .get('/foo?some=query')
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
-        sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {
+        assert.isNull(err);
+        assert.calledOnceWith(stub, 'some-lambda', {
           some: 'query'
         }, {}, sinon.match.func);
         done();
@@ -501,11 +489,8 @@ describe('gateway', () => {
     supertest(server)
       .get('/foo?some=1')
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
-        sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {
+        assert.isNull(err);
+        assert.calledOnceWith(stub, 'some-lambda', {
           some: true
         }, {}, sinon.match.func);
         done();
@@ -542,11 +527,8 @@ describe('gateway', () => {
       .post('/foo')
       .send('some=content')
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
-        sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {
+        assert.isNull(err);
+        assert.calledOnceWith(stub, 'some-lambda', {
           some: 'content'
         }, {}, sinon.match.func);
         done();
@@ -582,11 +564,8 @@ describe('gateway', () => {
     supertest(server)
       .get('/path/foo/bar')
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
-        sinon.assert.calledOnce(stub);
-        sinon.assert.calledWith(stub, 'some-lambda', {
+        assert.isNull(err);
+        assert.calledOnceWith(stub, 'some-lambda', {
           this: 'foo',
           that: 'bar'
         }, {}, sinon.match.func);
@@ -635,8 +614,8 @@ describe('gateway', () => {
         errorMessage: 'Internal server error'
       }))
       .expect(500, (err) => {
-        sinon.assert.calledOnce(log.error);
-        sinon.assert.calledWithMatch(log.error, 'Failed to parse event', {
+        assert.calledOnce(log.error);
+        assert.calledWithMatch(log.error, 'Failed to parse event', {
           event: 'no json',
           method: 'POST',
           url: '/foo'
@@ -691,14 +670,12 @@ describe('gateway', () => {
       .set('Authorization', 'Bearer abc.def.ghi')
       .expect('{"some":"response"}')
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
-        sinon.assert.calledTwice(stub);
-        sinon.assert.calledWith(stub, 'some-auth', {
+        assert.isNull(err);
+        assert.calledTwice(stub);
+        assert.calledWith(stub, 'some-auth', {
           authorizationToken: 'Bearer abc.def.ghi'
         }, {}, sinon.match.func);
-        sinon.assert.calledWith(stub, 'some-lambda', {
+        assert.calledWith(stub, 'some-lambda', {
           user: 'User123'
         }, {}, sinon.match.func);
         done();
@@ -736,10 +713,8 @@ describe('gateway', () => {
       .set('Authorization', 'something else')
       .expect('{"errorMessage":"Unauthorized"}')
       .expect(403, (err) => {
-        if (err) {
-          throw err;
-        }
-        sinon.assert.notCalled(stub);
+        assert.isNull(err);
+        refute.called(stub);
         done();
       });
   });
@@ -768,12 +743,8 @@ describe('gateway', () => {
           .set('Authorization', 'Bearer abc.def.ghi')
           .expect('{"some":"response"}')
           .expect(200, (err) => {
-            if (err) {
-              throw err;
-            }
-
-            sinon.assert.calledOnce(stub);
-            sinon.assert.calledWith(stub, 'some-lambda', {
+            assert.isNull(err);
+            assert.calledOnceWith(stub, 'some-lambda', {
               user: 'User123'
             }, {}, sinon.match.func);
             done();
@@ -810,7 +781,7 @@ describe('gateway', () => {
         if (err) {
           throw err;
         }
-        sinon.assert.notCalled(stub);
+        refute.called(stub);
         done();
       });
   });

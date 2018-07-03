@@ -3,8 +3,7 @@
 'use strict';
 
 const fs = require('fs');
-const assert = require('assert');
-const sinon = require('sinon');
+const { assert, refute, sinon } = require('@sinonjs/referee-sinon');
 const swagger = require('../lib/swagger');
 
 describe('loadSwagger', () => {
@@ -24,9 +23,8 @@ describe('loadSwagger', () => {
 
     const json = swagger.loadSwagger({ file: 'some/file.json' });
 
-    assert.deepEqual(json, { some: 'stuff' });
-    sinon.assert.calledOnce(fs.readFileSync);
-    sinon.assert.calledWith(fs.readFileSync, 'some/file.json');
+    assert.equals(json, { some: 'stuff' });
+    assert.calledOnceWith(fs.readFileSync, 'some/file.json');
   });
 
   it('reads default file if no file is given', () => {
@@ -34,8 +32,7 @@ describe('loadSwagger', () => {
 
     swagger.loadSwagger();
 
-    sinon.assert.calledOnce(fs.readFileSync);
-    sinon.assert.calledWith(fs.readFileSync, 'swagger.json');
+    assert.calledOnceWith(fs.readFileSync, 'swagger.json');
   });
 
   it('replaces external $ref with json', () => {
@@ -46,7 +43,7 @@ describe('loadSwagger', () => {
 
     const json = swagger.loadSwagger();
 
-    assert.deepEqual(json, {
+    assert.equals(json, {
       some: {
         other: 'content'
       }
@@ -64,7 +61,7 @@ describe('loadSwagger', () => {
 
     const json = swagger.loadSwagger();
 
-    assert.deepEqual(json, {
+    assert.equals(json, {
       some: {
         other: {
           deep: true
@@ -78,7 +75,7 @@ describe('loadSwagger', () => {
       '{"some":{"$ref":"#/def/model"}}'
     );
 
-    assert.doesNotThrow(() => {
+    refute.exception(() => {
       swagger.loadSwagger();
     });
   });
@@ -90,13 +87,13 @@ describe('loadSwagger', () => {
 
     const json = swagger.loadSwagger({ file: 'some/file.json' });
 
-    assert.deepEqual(json, { some: 'abc/def' });
+    assert.equals(json, { some: 'abc/def' });
   });
 
   it('throws if an environment variable is not defined', () => {
     fs.readFileSync.returns('{"some":"${test_unknown_variable}"}');
 
-    assert.throws(() => {
+    assert.exception(() => {
       swagger.loadSwagger();
     }, /Error: Missing environment variable "test_unknown_variable"$/);
   });
@@ -130,7 +127,7 @@ describe('inlineSwaggerRefs', () => {
 
     swagger.inlineSwaggerRefs(json);
 
-    assert.deepEqual(json, {
+    assert.equals(json, {
       some: {
         simple: true
       },
