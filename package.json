@@ -3,6 +3,7 @@
   "version": "1.8.0",
   "description": "JavaScript Studio Gateway",
   "author": "Maximilian Antoni <max@javascript.studio>",
+  "homepage": "https://github.com/javascript-studio/studio-gateway",
   "main": "lib/gateway.js",
   "bin": {
     "swagger": "bin/swagger.js"
@@ -14,7 +15,7 @@
     "posttest": "npm run lint",
     "start": "node .",
     "preversion": "npm test",
-    "version": "changes",
+    "version": "changes --commits",
     "postversion": "git push --follow-tags && npm publish"
   },
   "eslintConfig": {
