@@ -1,5 +1,18 @@
 # Changes
 
+## 2.0.0
+
+- 💥 [`6100329`](https://github.com/javascript-studio/studio-gateway/commit/610032979bc83932e88f474ceaceac8fd5a52bdd)
+  __BREAKING:__ Upgrade Studio Log to v2
+- 🐛 [`cf5596e`](https://github.com/javascript-studio/studio-gateway/commit/cf5596ec2cd10e2cca5238941c0580c02f1a4a4f)
+  Use `Buffer.from` instead of deprecated `new Buffer`
+- ✨ [`b22cbd8`](https://github.com/javascript-studio/studio-gateway/commit/b22cbd8c5875ebfa3ad23ed63361a76b9f078c9f)
+  Use Sinon default sandbox
+- ✨ [`fb779b4`](https://github.com/javascript-studio/studio-gateway/commit/fb779b45fbfc2c5c54fae4cf6a9202e2a98b86d4)
+  Use Sinon + Referee
+- 📚 [`d330f37`](https://github.com/javascript-studio/studio-gateway/commit/d330f378e598c53c4ad9877365320ac13eddb7f1)
+  Add commit links with `--commits`
+
 ## 1.8.0
 
 - 🍏 Cache authorization tokens according to configured ttl
