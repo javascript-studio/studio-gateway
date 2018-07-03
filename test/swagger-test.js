@@ -7,15 +7,13 @@ const { assert, refute, sinon } = require('@sinonjs/referee-sinon');
 const swagger = require('../lib/swagger');
 
 describe('loadSwagger', () => {
-  let sandbox;
 
   beforeEach(() => {
-    sandbox = sinon.createSandbox();
-    sandbox.stub(fs, 'readFileSync');
+    sinon.stub(fs, 'readFileSync');
   });
 
   afterEach(() => {
-    sandbox.restore();
+    sinon.restore();
   });
 
   it('returns parsed content of given file', () => {

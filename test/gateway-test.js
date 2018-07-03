@@ -42,18 +42,16 @@ function defineLambda(req_template = '$input.json(\'$\')', res_template) {
 }
 
 describe('gateway', () => {
-  let sandbox;
   let swagger;
   let server;
 
   beforeEach(() => {
-    sandbox = sinon.createSandbox();
-    sandbox.stub(log, 'error');
-    swagger = sandbox.stub(fs, 'readFileSync').withArgs('swagger.json');
+    sinon.stub(log, 'error');
+    swagger = sinon.stub(fs, 'readFileSync').withArgs('swagger.json');
   });
 
   afterEach((done) => {
-    sandbox.restore();
+    sinon.restore();
     if (server) {
       server.close(done);
       server = null;
