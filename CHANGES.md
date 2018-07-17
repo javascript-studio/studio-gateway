@@ -1,5 +1,10 @@
 # Changes
 
+## 2.1.1
+
+- 🐛 [`e412fbe`](https://github.com/javascript-studio/studio-gateway/commit/e412fbe388fe68da42e365bfab6251479dc1b689)
+  Fix stage variable check
+
 ## 2.1.0
 
 - 🍏 [`3384515`](https://github.com/javascript-studio/studio-gateway/commit/33845156a924580c071092554a39e0604f89452a)
