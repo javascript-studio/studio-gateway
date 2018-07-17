@@ -122,6 +122,36 @@ describe('gateway', () => {
       .expect(200, done);
   });
 
+  it('responds with stage variable', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          get: {
+            responses: { 200: {} },
+            'x-amazon-apigateway-integration': {
+              type: 'mock',
+              responses: {
+                default: {
+                  statusCode: '200',
+                  responseParameters: {
+                    'method.response.header.x-foo-bar': 'stageVariables.test'
+                  },
+                  responseTemplate: '{}'
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    supertest(create({ stageVariables: { test: 'thingy' } }))
+      .get('/foo')
+      .expect('content-type', 'application/json')
+      .expect('x-foo-bar', 'thingy')
+      .expect(200, done);
+  });
+
   it('emits "lambda" event with empty body', (done) => {
     swag({
       paths: {
@@ -215,6 +245,68 @@ describe('gateway', () => {
       .post('/foo')
       .expect('{"code":"E_FOO"}')
       .expect(500, done);
+  });
+
+  it('maps stage name', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            responses: { 200: {} },
+            parameters: [],
+            'x-amazon-apigateway-integration':
+              defineLambda('{"stage":"$context.stage"}')
+          }
+        }
+      }
+    });
+    create({ stage: 'beta' });
+    const stub = sinon.stub().yields(null, {});
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('Authorization', 'Secret')
+      .expect(200, (err) => {
+        if (err) {
+          throw err;
+        }
+        assert.calledOnceWith(stub, 'some-lambda', {
+          stage: 'beta'
+        }, {}, sinon.match.func);
+        done();
+      });
+  });
+
+  it('maps stage variable', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            responses: { 200: {} },
+            parameters: [],
+            'x-amazon-apigateway-integration':
+              defineLambda('{"foo":"$stageVariables.foo"}')
+          }
+        }
+      }
+    });
+    create({ stageVariables: { foo: 'bar' } });
+    const stub = sinon.stub().yields(null, {});
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('Authorization', 'Secret')
+      .expect(200, (err) => {
+        if (err) {
+          throw err;
+        }
+        assert.calledOnceWith(stub, 'some-lambda', {
+          foo: 'bar'
+        }, {}, sinon.match.func);
+        done();
+      });
   });
 
   it('maps request header to parameter', (done) => {

@@ -80,16 +80,16 @@ describe('renderTemplate', () => {
 
   it('quoted $util.path(path) with string value', () => {
     // Use this notation for optional body values:
-    const res = renderTemplate('{"x":"$input.path(\'$.y\')"}',
-      {}, {}, { y: 'y' });
+    const res = renderTemplate('{"x":"$input.path(\'$.y\')"}', {}, {}, {
+      y: 'y'
+    });
 
     assert.json(res, { x: 'y' });
   });
 
   it('quoted $util.path(path) with undefined', () => {
     // Use this notation for optional body values:
-    const res = renderTemplate('{"x":"$input.path(\'$.y\')"}',
-      {}, {}, {});
+    const res = renderTemplate('{"x":"$input.path(\'$.y\')"}', {}, {}, {});
 
     assert.json(res, { x: '' });
   });
@@ -129,6 +129,14 @@ describe('renderTemplate', () => {
     const res = renderTemplate('$util.base64Decode(\'dGVzdA==\')', {}, {});
 
     assert.equals(res, 'test');
+  });
+
+  it('stageVariables.test', () => {
+    const res = renderTemplate('$stageVariables.test', {}, {}, {}, {}, {
+      test: 42
+    });
+
+    assert.equals(res, '42');
   });
 
 });

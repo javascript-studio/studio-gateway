@@ -34,6 +34,8 @@ gateway.listen(1337);
   for the given options.
     - `swagger_file`: The swagger file to read. Defaults to `swagger.json`.
     - `swagger_env`: The [dotenv][] config to read.
+    - `stage`: The stage name to use. Defaults to "local".
+    - `stageVariables`: The stage variables to use. Default to an empty object.
 - `gateway.listen(port[, callback])`: Bind the server to the given port.
 
 ## Events
