@@ -89,8 +89,8 @@ describe('loadSwagger', () => {
   });
 
   it('replaces stage variable with environment variable', () => {
-    process.env['stageVariable.test'] = 'abc';
-    fs.readFileSync.returns('{"some":"${stageVariable.test}"}');
+    process.env['stageVariables.test'] = 'abc';
+    fs.readFileSync.returns('{"some":"${stageVariables.test}"}');
 
     const json = swagger.loadSwagger({ file: 'some/file.json' });
 
@@ -106,11 +106,11 @@ describe('loadSwagger', () => {
   });
 
   it('does not throw if a stage variable is not defined', () => {
-    fs.readFileSync.returns('{"some":"${stageVariable.unknown}"}');
+    fs.readFileSync.returns('{"some":"${stageVariables.unknown}"}');
 
     const json = swagger.loadSwagger({ file: 'some/file.json' });
 
-    assert.equals(json, { some: '${stageVariable.unknown}' });
+    assert.equals(json, { some: '${stageVariables.unknown}' });
   });
 
 });
