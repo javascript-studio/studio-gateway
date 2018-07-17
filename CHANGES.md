@@ -1,5 +1,10 @@
 # Changes
 
+## 2.2.0
+
+- 🍏 [`45bf0d9`](https://github.com/javascript-studio/studio-gateway/commit/45bf0d90c7c3b667030411dbb032bf50b8c60cdf)
+  Add support for `stage` and `stageVariables` options
+
 ## 2.1.1
 
 - 🐛 [`e412fbe`](https://github.com/javascript-studio/studio-gateway/commit/e412fbe388fe68da42e365bfab6251479dc1b689)
