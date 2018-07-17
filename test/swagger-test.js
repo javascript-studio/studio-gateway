@@ -88,12 +88,29 @@ describe('loadSwagger', () => {
     assert.equals(json, { some: 'abc/def' });
   });
 
+  it('replaces stage variable with environment variable', () => {
+    process.env['stageVariable.test'] = 'abc';
+    fs.readFileSync.returns('{"some":"${stageVariable.test}"}');
+
+    const json = swagger.loadSwagger({ file: 'some/file.json' });
+
+    assert.equals(json, { some: 'abc' });
+  });
+
   it('throws if an environment variable is not defined', () => {
     fs.readFileSync.returns('{"some":"${test_unknown_variable}"}');
 
     assert.exception(() => {
       swagger.loadSwagger();
     }, /Error: Missing environment variable "test_unknown_variable"$/);
+  });
+
+  it('does not throw if a stage variable is not defined', () => {
+    fs.readFileSync.returns('{"some":"${stageVariable.unknown}"}');
+
+    const json = swagger.loadSwagger({ file: 'some/file.json' });
+
+    assert.equals(json, { some: '${stageVariable.unknown}' });
   });
 
 });
