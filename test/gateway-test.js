@@ -173,9 +173,7 @@ describe('gateway', () => {
       .send({ some: 'request' }) // ignored
       .expect('{"some":"response"}')
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
+        assert.isNull(err);
         assert.calledOnceWith(stub, 'some-lambda', {
           // Empty body
         }, {}, sinon.match.func);
@@ -268,9 +266,7 @@ describe('gateway', () => {
       .post('/foo')
       .set('Authorization', 'Secret')
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
+        assert.isNull(err);
         assert.calledOnceWith(stub, 'some-lambda', {
           stage: 'beta'
         }, {}, sinon.match.func);
@@ -299,9 +295,7 @@ describe('gateway', () => {
       .post('/foo')
       .set('Authorization', 'Secret')
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
+        assert.isNull(err);
         assert.calledOnceWith(stub, 'some-lambda', {
           foo: 'bar'
         }, {}, sinon.match.func);
@@ -334,9 +328,7 @@ describe('gateway', () => {
       .post('/foo')
       .set('Authorization', 'Secret')
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
+        assert.isNull(err);
         assert.calledOnceWith(stub, 'some-lambda', {
           auth: 'Secret'
         }, {}, sinon.match.func);
@@ -375,9 +367,7 @@ describe('gateway', () => {
       .set('accept', 'application/json')
       .send({ some: 'content' })
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
+        assert.isNull(err);
         assert.calledOnceWith(stub, 'some-lambda', {
           some: 'content'
         }, {}, sinon.match.func);
@@ -784,9 +774,7 @@ describe('gateway', () => {
       .set('Authorization', 'Bearer abc.def.ghi')
       .expect('{"errorMessage":"Unauthorized"}')
       .expect(403, (err) => {
-        if (err) {
-          throw err;
-        }
+        assert.isNull(err);
         done();
       });
   });
@@ -822,9 +810,7 @@ describe('gateway', () => {
       .set('Authorization', 'Bearer abc.def.ghi')
       .expect('{"some":"response"}')
       .expect(200, (err) => {
-        if (err) {
-          throw err;
-        }
+        assert.isNull(err);
         stub.resetHistory();
 
         supertest(server)
@@ -860,7 +846,7 @@ describe('gateway', () => {
       }
     });
     create();
-    const stub = sinon.stub();
+    const stub = sinon.stub().yields('Unexpected');
     server.on('lambda', stub);
 
     supertest(server)
@@ -868,10 +854,71 @@ describe('gateway', () => {
       .set('accept', 'application/json')
       .expect('{"errorMessage":"Invalid request"}')
       .expect(400, (err) => {
-        if (err) {
-          throw err;
-        }
+        assert.isNull(err);
         refute.called(stub);
+        done();
+      });
+  });
+
+  function createPostWithBodyAndRequiredField() {
+    return {
+      post: {
+        responses: { 200: {} },
+        parameters: [{
+          in: 'body',
+          schema: {
+            type: 'object',
+            properties: {
+              test: {
+                type: 'string'
+              }
+            },
+            required: ['test']
+          }
+        }],
+        'x-amazon-apigateway-integration': defineLambda()
+      }
+    };
+  }
+
+  it('responds with 400 if required body property is missing', (done) => {
+    swag({
+      paths: {
+        '/foo': createPostWithBodyAndRequiredField()
+      }
+    });
+    create();
+    const stub = sinon.stub().yields('Unexpected');
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('accept', 'application/json')
+      .send({})
+      .expect(400, '{"errorMessage":"Invalid request"}', (err) => {
+        assert.isNull(err);
+        refute.called(stub);
+        done();
+      });
+  });
+
+  it('responds with 200 if required body property is provided', (done) => {
+    swag({
+      paths: {
+        '/foo': createPostWithBodyAndRequiredField()
+      }
+    });
+    create();
+    const stub = sinon.stub().yields(null, {});
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('accept', 'application/json')
+      .send({ test: 'yes' })
+      .expect(200, '{}', (err) => {
+        assert.isNull(err);
+        assert.calledOnceWith(stub);
         done();
       });
   });
