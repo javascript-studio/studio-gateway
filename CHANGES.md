@@ -1,5 +1,10 @@
 # Changes
 
+## 2.2.1
+
+- 🐛 [`887c0e6`](https://github.com/javascript-studio/studio-gateway/commit/887c0e6b4d021d668a8912f5abaf168f54db6673)
+  Fix required fields check in body schema
+
 ## 2.2.0
 
 - 🍏 [`45bf0d9`](https://github.com/javascript-studio/studio-gateway/commit/45bf0d90c7c3b667030411dbb032bf50b8c60cdf)
