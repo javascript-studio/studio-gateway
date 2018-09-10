@@ -828,6 +828,62 @@ describe('gateway', () => {
       });
   });
 
+  it('exposes context from secured lambda reply', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            security: [{
+              JWT: []
+            }],
+            responses: { 200: {} },
+            'x-amazon-apigateway-integration': defineLambda(
+              '{"key":"$context.authorizer.key","is":$context.authorizer.is}'
+            )
+          }
+        }
+      },
+      securityDefinitions: {
+        JWT: {
+          type: 'apiKey',
+          name: 'Authorization',
+          in: 'header',
+          'x-amazon-apigateway-authtype': 'custom',
+          'x-amazon-apigateway-authorizer': {
+            type: 'token',
+            authorizerUri: lambdaUri('some-auth')
+          }
+        }
+      }
+    });
+    create();
+
+    const stub = sinon.stub();
+    stub.withArgs('some-auth').yields(null, {
+      principalId: 'User123',
+      context: {
+        key: 'value',
+        is: 42
+      }
+    });
+    stub.withArgs('some-lambda').yields(null, { some: 'response' });
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('accept', 'application/json')
+      .set('Authorization', 'Bearer abc.def.ghi')
+      .expect('{"some":"response"}')
+      .expect(200, (err) => {
+        assert.isNull(err);
+        assert.calledWith(stub, 'some-lambda', {
+          key: 'value',
+          is: 42
+        });
+        done();
+      });
+  });
+
   it('responds with 400 if required parameter is missing', (done) => {
     swag({
       paths: {
