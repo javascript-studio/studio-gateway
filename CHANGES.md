@@ -1,5 +1,14 @@
 # Changes
 
+## 2.3.0
+
+- 🍏 [`a45e9e9`](https://github.com/javascript-studio/studio-gateway/commit/a45e9e9bf02f1e93c740b2761e31b2cd110287a0)
+  Add support for security policy context properties
+- 📚 [`758619c`](https://github.com/javascript-studio/studio-gateway/commit/758619c5b124cbdfab2905e6a4ee5fef0f36a2bb)
+  Update Studio Changes for `--footer` support
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2018-09-10._
+
 ## 2.2.1
 
 - 🐛 [`887c0e6`](https://github.com/javascript-studio/studio-gateway/commit/887c0e6b4d021d668a8912f5abaf168f54db6673)
