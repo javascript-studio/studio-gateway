@@ -15,7 +15,7 @@
     "posttest": "npm run lint",
     "start": "node .",
     "preversion": "npm test",
-    "version": "changes --commits",
+    "version": "changes --commits --footer",
     "postversion": "git push --follow-tags && npm publish"
   },
   "eslintConfig": {
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@sinonjs/referee-sinon": "^4.1.0",
-    "@studio/changes": "^1.5.2",
+    "@studio/changes": "^1.7.0",
     "@studio/eslint-config": "^1.0.0",
     "eslint": "^5.0.1",
     "mocha": "^5.2.0",
