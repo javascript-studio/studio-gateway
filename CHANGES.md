@@ -1,5 +1,14 @@
 # Changes
 
+## 2.3.1
+
+- 🐛 [`2db3e54`](https://github.com/javascript-studio/studio-gateway/commit/2db3e54a60f335ac6a08665559a83729c8ad9c9a)
+  Allow schema-less body
+- 🐛 [`1f751a7`](https://github.com/javascript-studio/studio-gateway/commit/1f751a77e5e7a12a9a13fd4d587c24ab0607959b)
+  Allow any type if "type" is not specified
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2018-12-05._
+
 ## 2.3.0
 
 - 🍏 [`a45e9e9`](https://github.com/javascript-studio/studio-gateway/commit/a45e9e9bf02f1e93c740b2761e31b2cd110287a0)
