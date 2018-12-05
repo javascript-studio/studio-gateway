@@ -507,7 +507,8 @@ describe('gateway', () => {
             parameters: [{
               in: 'body',
               schema: {
-                type: 'object'
+                type: 'object',
+                properties: {}
               }
             }],
             'x-amazon-apigateway-integration': defineLambda()
@@ -526,6 +527,40 @@ describe('gateway', () => {
       .expect(200, (err) => {
         assert.isNull(err);
         assert.calledOnceWith(stub, 'some-lambda', {}, {}, sinon.match.func);
+        done();
+      });
+  });
+
+  it('maps schema-less body as is', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            responses: { 200: {} },
+            parameters: [{
+              in: 'body',
+              schema: {
+                type: 'object'
+              }
+            }],
+            'x-amazon-apigateway-integration': defineLambda()
+          }
+        }
+      }
+    });
+    create();
+    const stub = sinon.stub().yields(null, {});
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('accept', 'application/json')
+      .send({ some: 'content' }) // provided, but ignored
+      .expect(200, (err) => {
+        assert.isNull(err);
+        assert.calledOnceWith(stub, 'some-lambda', {
+          some: 'content'
+        }, {}, sinon.match.func);
         done();
       });
   });
