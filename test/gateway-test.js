@@ -375,6 +375,43 @@ describe('gateway', () => {
       });
   });
 
+  it('allows any type if "type" is not specified', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          post: {
+            responses: { 200: {} },
+            parameters: [{
+              in: 'body',
+              schema: {
+                type: 'object',
+                properties: {
+                  some: {}
+                }
+              }
+            }],
+            'x-amazon-apigateway-integration': defineLambda()
+          }
+        }
+      }
+    });
+    create();
+    const stub = sinon.stub().yields(null, {});
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('accept', 'application/json')
+      .send({ some: 42 })
+      .expect(200, (err) => {
+        assert.isNull(err);
+        assert.calledOnceWith(stub, 'some-lambda', {
+          some: 42
+        }, {}, sinon.match.func);
+        done();
+      });
+  });
+
   it('maps nested body json to parameter', (done) => {
     swag({
       paths: {
