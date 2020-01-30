@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+/*
+ * Copyright (c) Maximilian Antoni <max@javascript.studio>
+ */
 'use strict';
 
 const argv = require('minimist')(process.argv.slice(2), {
