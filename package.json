@@ -31,7 +31,7 @@
     "velocityjs": "^1.1.1"
   },
   "devDependencies": {
-    "@sinonjs/referee-sinon": "^4.1.0",
+    "@sinonjs/referee-sinon": "^6.0.1",
     "@studio/changes": "^2.0.0",
     "@studio/eslint-config": "^1.0.0",
     "eslint": "^5.0.1",
