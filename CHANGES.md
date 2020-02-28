@@ -1,5 +1,32 @@
 # Changes
 
+## 2.3.2
+
+- 🐛 [`5e88eb1`](https://github.com/javascript-studio/studio-gateway/commit/5e88eb1fc16a06860017220e851ffcf51afe6c95)
+  Log 404 failures
+- ✨ [`ebc0dea`](https://github.com/javascript-studio/studio-gateway/commit/ebc0dea2cb0d36795815e859a3198eb56f4ae556)
+  Add "files" section to `package.json`
+- ✨ [`bbd95a7`](https://github.com/javascript-studio/studio-gateway/commit/bbd95a7e6c9aa4a5eeaffaf85b0c1581c36d0035)
+  Upgrade referee-sinon to v7
+- ✨ [`2d891da`](https://github.com/javascript-studio/studio-gateway/commit/2d891da1aa3ffd55c99763771141a9b1c6b9fc21)
+  Update Mocha
+- ✨ [`5b0586a`](https://github.com/javascript-studio/studio-gateway/commit/5b0586a3fbae204f7ed6ca29c5130caff2fce726)
+  Rename function variables to match naming convention
+- ✨ [`945a249`](https://github.com/javascript-studio/studio-gateway/commit/945a2496d4606c3b7091f60209ed9f0a64830eaf)
+  npm audit
+- ✨ [`daad371`](https://github.com/javascript-studio/studio-gateway/commit/daad3711de737153fa8749564018d8462e98d37d)
+  Upgrade eslint to latest
+- ✨ [`5ca938d`](https://github.com/javascript-studio/studio-gateway/commit/5ca938d142cd409c9540c8f11ee7d9c6c1902611)
+  Upgrade Mocha to latest
+- ✨ [`5635652`](https://github.com/javascript-studio/studio-gateway/commit/5635652b0e631c507ad51f401c289700abc967d8)
+  Upgrade @sinonjs/referee-sinon to latest
+- ✨ [`c4c7978`](https://github.com/javascript-studio/studio-gateway/commit/c4c7978592453a86809ce9aa4c892e22b61e517d)
+  Update Studio Changes to v2
+- 📚 [`f64e232`](https://github.com/javascript-studio/studio-gateway/commit/f64e2326d23e87003ebe179cf4046a797e7096d4)
+  Add copyright statement
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2020-02-28._
+
 ## 2.3.1
 
 - 🐛 [`2db3e54`](https://github.com/javascript-studio/studio-gateway/commit/2db3e54a60f335ac6a08665559a83729c8ad9c9a)
