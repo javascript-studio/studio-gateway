@@ -47,6 +47,7 @@ describe('gateway', () => {
 
   beforeEach(() => {
     sinon.stub(log, 'error');
+    sinon.stub(log, 'terminate');
     swagger = sinon.stub(fs, 'readFileSync').withArgs('swagger.json');
   });
 
@@ -75,7 +76,13 @@ describe('gateway', () => {
 
     supertest(create())
       .get('/unknown')
-      .expect(404, done);
+      .expect(404, (err) => {
+        assert.calledOnceWith(log.terminate, 'Not found', {
+          method: 'GET',
+          url: '/unknown'
+        });
+        done(err);
+      });
   });
 
   it('returns 404 for unknown method', (done) => {
