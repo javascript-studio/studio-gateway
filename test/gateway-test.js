@@ -852,7 +852,7 @@ describe('gateway', () => {
       .set('accept', 'application/json')
       .set('Authorization', 'Bearer abc.def.ghi')
       .expect('{"errorMessage":"Unauthorized"}')
-      .expect(403, (err) => {
+      .expect(401, (err) => {
         assert.isNull(err);
         done();
       });
@@ -869,7 +869,7 @@ describe('gateway', () => {
       .set('accept', 'application/json')
       .set('Authorization', 'something else')
       .expect('{"errorMessage":"Unauthorized"}')
-      .expect(403, (err) => {
+      .expect(401, (err) => {
         assert.isNull(err);
         refute.called(stub);
         done();
