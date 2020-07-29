@@ -1,5 +1,12 @@
 # Changes
 
+## 2.3.3
+
+- 🐛 [`6c5cf73`](https://github.com/javascript-studio/studio-gateway/commit/6c5cf73f09eb49a68f3a0cc16212da4b0a95387e)
+  Fix status code when unauthorized
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2020-07-29._
+
 ## 2.3.2
 
 - 🐛 [`5e88eb1`](https://github.com/javascript-studio/studio-gateway/commit/5e88eb1fc16a06860017220e851ffcf51afe6c95)
