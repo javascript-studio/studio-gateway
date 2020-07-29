@@ -1,5 +1,12 @@
 # Changes
 
+## 2.3.4
+
+- 🐛 [`f16523f`](https://github.com/javascript-studio/studio-gateway/commit/f16523fcc5fc9382db6a7844ad3b47b596fd7fd4)
+  Fix message property when unauthorized
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2020-07-29._
+
 ## 2.3.3
 
 - 🐛 [`6c5cf73`](https://github.com/javascript-studio/studio-gateway/commit/6c5cf73f09eb49a68f3a0cc16212da4b0a95387e)
