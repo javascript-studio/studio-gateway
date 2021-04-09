@@ -4,6 +4,7 @@
  */
 'use strict';
 
+const fs = require('fs');
 const argv = require('minimist')(process.argv.slice(2), {
   alias: {
     env: 'e',
@@ -18,7 +19,7 @@ const json = loadSwagger(argv);
 const str = JSON.stringify(json, null, '  ');
 
 if (argv.outfile) {
-  require('fs').writeFile(argv.outfile, str, (err) => {
+  fs.writeFile(argv.outfile, str, (err) => {
     if (err) {
       throw err;
     }
