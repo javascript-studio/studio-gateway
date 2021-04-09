@@ -1,5 +1,4 @@
-/*eslint-env mocha*/
-/*eslint no-sync: 0*/
+/*eslint node/no-sync: 0*/
 'use strict';
 
 const fs = require('fs');
@@ -81,6 +80,7 @@ describe('loadSwagger', () => {
   it('replaces environment variables', () => {
     process.env.test_env_1 = 'abc';
     process.env.test_env_2 = 'def';
+    // eslint-disable-next-line no-template-curly-in-string
     fs.readFileSync.returns('{"some":"${test_env_1}/${test_env_2}"}');
 
     const json = swagger.loadSwagger({ file: 'some/file.json' });
@@ -90,6 +90,7 @@ describe('loadSwagger', () => {
 
   it('replaces stage variable with environment variable', () => {
     process.env['stageVariables.test'] = 'abc';
+    // eslint-disable-next-line no-template-curly-in-string
     fs.readFileSync.returns('{"some":"${stageVariables.test}"}');
 
     const json = swagger.loadSwagger({ file: 'some/file.json' });
@@ -98,6 +99,7 @@ describe('loadSwagger', () => {
   });
 
   it('throws if an environment variable is not defined', () => {
+    // eslint-disable-next-line no-template-curly-in-string
     fs.readFileSync.returns('{"some":"${test_unknown_variable}"}');
 
     assert.exception(() => {
@@ -106,10 +108,12 @@ describe('loadSwagger', () => {
   });
 
   it('does not throw if a stage variable is not defined', () => {
+    // eslint-disable-next-line no-template-curly-in-string
     fs.readFileSync.returns('{"some":"${stageVariables.unknown}"}');
 
     const json = swagger.loadSwagger({ file: 'some/file.json' });
 
+    // eslint-disable-next-line no-template-curly-in-string
     assert.equals(json, { some: '${stageVariables.unknown}' });
   });
 

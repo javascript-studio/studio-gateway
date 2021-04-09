@@ -1,4 +1,3 @@
-/*eslint-env mocha*/
 'use strict';
 
 const fs = require('fs');
@@ -22,7 +21,7 @@ function lambdaUri(name = 'some-lambda') {
     + `studio_${name}:current/invocations`;
 }
 
-function defineLambda(req_template = '$input.json(\'$\')', res_template) {
+function defineLambda(req_template = '$input.json(\'$\')', res_template = null) {
   const responseTemplates = res_template ? {
     'application/json': res_template
   } : null;
@@ -897,8 +896,8 @@ describe('gateway', () => {
           .set('accept', 'application/json')
           .set('Authorization', 'Bearer abc.def.ghi')
           .expect('{"some":"response"}')
-          .expect(200, (err) => {
-            assert.isNull(err);
+          .expect(200, (err2) => {
+            assert.isNull(err2);
             assert.calledOnceWith(stub, 'some-lambda', {
               user: 'User123'
             }, {}, sinon.match.func);
