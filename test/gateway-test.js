@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const supertest = require('supertest');
-const { assert, refute, sinon } = require('@sinonjs/referee-sinon');
+const { assert, refute, match, sinon } = require('@sinonjs/referee-sinon');
 const logger = require('@studio/log');
 const gateway = require('..');
 
@@ -773,11 +773,15 @@ describe('gateway', () => {
       }))
       .expect(500, (err) => {
         assert.calledOnce(log.error);
-        assert.calledWithMatch(log.error, 'Failed to parse event', {
-          event: 'no json',
+        assert.calledWith(log.error, 'Internal server error', {
           method: 'POST',
-          url: '/foo'
-        }, 'SyntaxError: Unexpected token o in JSON at position 1');
+          url: '/foo',
+          headers: match.object
+        }, match({
+          name: 'SyntaxError',
+          message: 'Unexpected token o in JSON at position 1 while parsing '
+            + 'near \'no json\''
+        }));
         done(err);
       });
   });
