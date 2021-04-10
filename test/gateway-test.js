@@ -1061,4 +1061,83 @@ describe('gateway', () => {
       });
   });
 
+  it('invokes aws_proxy integration lambda', (done) => {
+    swag({
+      paths: {
+        '/foo/{key}': {
+          put: {
+            security: [{
+              JWT: []
+            }],
+            'x-amazon-apigateway-integration': {
+              type: 'aws_proxy',
+              uri: lambdaUri()
+            }
+          }
+        }
+      },
+      securityDefinitions: {
+        JWT: {
+          type: 'apiKey',
+          name: 'Authorization',
+          in: 'header',
+          'x-amazon-apigateway-authtype': 'custom',
+          'x-amazon-apigateway-authorizer': {
+            type: 'token',
+            authorizerUri: lambdaUri('some-auth')
+          }
+        }
+      }
+    });
+    create({ stage: 'beta', stageVariables: { foo: 'bar' } });
+    const stub = sinon.stub();
+    stub.withArgs('some-auth').yields(null, {
+      principalId: 'User123',
+      context: {
+        key: 'value',
+        is: 42
+      }
+    });
+    stub.withArgs('some-lambda').yields(null, {
+      statusCode: 200,
+      body: '{}'
+    });
+    server.on('lambda', stub);
+
+    supertest(server)
+      .put('/foo/thingy?this=that')
+      .set('accept', 'application/json')
+      .set('Authorization', 'Bearer abc.def.ghi')
+      .send({ test: 'yes' })
+      .expect(200, '{}', (err) => {
+        assert.isNull(err);
+        assert.calledWith(stub, 'some-auth', {
+          authorizationToken: 'Bearer abc.def.ghi'
+        });
+        assert.calledWith(stub, 'some-lambda', match({
+          path: '/foo/thingy',
+          httpMethod: 'PUT',
+          headers: {
+            'accept': 'application/json'
+          },
+          pathParameters: { key: 'thingy' },
+          queryStringParameters: { this: 'that' },
+          stageVariables: { foo: 'bar' },
+          requestContext: match({
+            accountId: '0000',
+            stage: 'beta',
+            identity: {
+              principalId: 'User123',
+              key: 'value',
+              is: '42'
+            },
+            httpMethod: 'PUT'
+          }),
+          body: '{"test":"yes"}',
+          isBase64Encoded: false
+        }));
+        done();
+      });
+  });
+
 });
