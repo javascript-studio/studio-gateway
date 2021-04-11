@@ -30,6 +30,10 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
+      - name: Configure npm
+        run: |
+          # Configure npm token:
+          echo //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }} > .npmrc
       - name: Install
         run: npm ci
       - name: Lint
