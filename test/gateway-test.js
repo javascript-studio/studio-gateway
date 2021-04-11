@@ -1140,4 +1140,37 @@ describe('gateway', () => {
       });
   });
 
+  it('invokes aws_proxy integration lambda with any method', (done) => {
+    swag({
+      paths: {
+        '/foo': {
+          'x-amazon-apigateway-any-method': {
+            'x-amazon-apigateway-integration': {
+              type: 'aws_proxy',
+              uri: lambdaUri()
+            }
+          }
+        }
+      }
+    });
+    create();
+    const stub = sinon.stub().withArgs('some-lambda').yields(null, {
+      statusCode: 200,
+      body: '{}'
+    });
+    server.on('lambda', stub);
+
+    supertest(server)
+      .delete('/foo')
+      .send()
+      .expect(200, (err) => {
+        assert.isNull(err);
+        assert.calledWith(stub, 'some-lambda', match({
+          path: '/foo',
+          httpMethod: 'DELETE'
+        }));
+        done();
+      });
+  });
+
 });
