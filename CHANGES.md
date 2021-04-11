@@ -1,5 +1,42 @@
 # Changes
 
+## 2.4.0
+
+- 🍏 [`2b001c7`](https://github.com/javascript-studio/studio-gateway/commit/2b001c7bc65ef4423ab3c01b70faa5e5b5c3a0b2)
+  Implement greedy path parameters
+- 🍏 [`b56fc27`](https://github.com/javascript-studio/studio-gateway/commit/b56fc277d47423142dd20cea198cd57a614be697)
+  Implement any method
+- 🍏 [`1b181e6`](https://github.com/javascript-studio/studio-gateway/commit/1b181e6c9c2283ef423cec1a8c929868e31dd90a)
+  Implement proxy integration
+- 🐛 [`82433d8`](https://github.com/javascript-studio/studio-gateway/commit/82433d832fe071f099f551b36393480d59a8da4d)
+  Check for empty security config
+- ✨ [`a6d28d6`](https://github.com/javascript-studio/studio-gateway/commit/a6d28d642ac46acf18046c5bc8701f8e5e32b7a2)
+  Configure npm token for CI build
+- ✨ [`a2fdd12`](https://github.com/javascript-studio/studio-gateway/commit/a2fdd126ebcc30d905e960d8a4a8208d0e684eb6)
+  Pass parsed URL to integration
+- ✨ [`18f8a3f`](https://github.com/javascript-studio/studio-gateway/commit/18f8a3f481898d839c0f34bd5d77868fcd2c4ff5)
+  Move `parseLamdaName` into own file
+- ✨ [`3ab3cd2`](https://github.com/javascript-studio/studio-gateway/commit/3ab3cd27af65c1a676eb3360d5ce8becedcdad2d)
+  Move template parsing into integration-aws
+- ✨ [`5cf34ef`](https://github.com/javascript-studio/studio-gateway/commit/5cf34ef819f0ed996c43da82f63d481a049bb299)
+  Move response handling into integration-aws
+- ✨ [`af950fc`](https://github.com/javascript-studio/studio-gateway/commit/af950fcd9e2b46fe3e365e15713e591684544ac6)
+  Rename request to integration-aws
+- ✨ [`b8c3c03`](https://github.com/javascript-studio/studio-gateway/commit/b8c3c035a0f9c540f63afd7a2151569f6a07e6a7)
+  Configure GitHub actions
+- ✨ [`6eb66ba`](https://github.com/javascript-studio/studio-gateway/commit/6eb66ba613885776d33ffa62248b481255560495)
+  Upgrade mocha and referee-sinon
+- ✨ [`293e9cd`](https://github.com/javascript-studio/studio-gateway/commit/293e9cdaa034e91d1a95971499f70b6d390985c0)
+  Upgrade eslint and eslint config
+- ✨ [`0902da9`](https://github.com/javascript-studio/studio-gateway/commit/0902da9b285c0608666af4eb30fea60444bcf369)
+  Update dependencies
+- ✨ [`899987d`](https://github.com/javascript-studio/studio-gateway/commit/899987db8dba7fe2a2596f955433711c2d665316)
+  Use npm 7
+- ✨ [`469f15d`](https://github.com/javascript-studio/studio-gateway/commit/469f15d2a415a41151779c72cf8cf9d3b438c553)
+  Add .gitignore
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2021-04-11._
+
 ## 2.3.4
 
 - 🐛 [`f16523f`](https://github.com/javascript-studio/studio-gateway/commit/f16523fcc5fc9382db6a7844ad3b47b596fd7fd4)
