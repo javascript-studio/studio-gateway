@@ -1,5 +1,12 @@
 # Changes
 
+## 2.4.1
+
+- 🐛 [`8e5bcbc`](https://github.com/javascript-studio/studio-gateway/commit/8e5bcbcbf722a3b1235f104692e9648d903428a6)
+  Do not require token validation
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2021-04-12._
+
 ## 2.4.0
 
 - 🍏 [`2b001c7`](https://github.com/javascript-studio/studio-gateway/commit/2b001c7bc65ef4423ab3c01b70faa5e5b5c3a0b2)
