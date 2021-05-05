@@ -1,5 +1,12 @@
 # Changes
 
+## 2.4.2
+
+- 🐛 [`b90a33d`](https://github.com/javascript-studio/studio-gateway/commit/b90a33de4e4022f6928d29efd87a5f02803de0c3)
+  Fail if Lambda integration httpMethod is not POST (#9)
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2021-05-05._
+
 ## 2.4.1
 
 - 🐛 [`8e5bcbc`](https://github.com/javascript-studio/studio-gateway/commit/8e5bcbcbf722a3b1235f104692e9648d903428a6)
