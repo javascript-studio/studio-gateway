@@ -28,6 +28,7 @@ function defineLambda(req_template = '$input.json(\'$\')', res_template = null) 
   return {
     type: 'aws',
     uri: lambdaUri(),
+    httpMethod: 'POST',
     requestTemplates: {
       'application/json': req_template
     },
@@ -196,6 +197,7 @@ describe('gateway', () => {
             'x-amazon-apigateway-integration': {
               type: 'aws',
               uri: lambdaUri(),
+              httpMethod: 'POST',
               requestTemplates: {
                 'application/json': '{}'
               },
@@ -226,6 +228,7 @@ describe('gateway', () => {
             'x-amazon-apigateway-integration': {
               type: 'aws',
               uri: lambdaUri(),
+              httpMethod: 'POST',
               requestTemplates: {
                 'application/json': '{}'
               },
@@ -1071,7 +1074,8 @@ describe('gateway', () => {
             }],
             'x-amazon-apigateway-integration': {
               type: 'aws_proxy',
-              uri: lambdaUri()
+              uri: lambdaUri(),
+              httpMethod: 'POST'
             }
           }
         }
@@ -1147,7 +1151,8 @@ describe('gateway', () => {
           'x-amazon-apigateway-any-method': {
             'x-amazon-apigateway-integration': {
               type: 'aws_proxy',
-              uri: lambdaUri()
+              uri: lambdaUri(),
+              httpMethod: 'POST'
             }
           }
         }
@@ -1180,7 +1185,8 @@ describe('gateway', () => {
           get: {
             'x-amazon-apigateway-integration': {
               type: 'aws_proxy',
-              uri: lambdaUri()
+              uri: lambdaUri(),
+              httpMethod: 'POST'
             }
           }
         }
