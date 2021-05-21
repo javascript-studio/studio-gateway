@@ -1,5 +1,12 @@
 # Changes
 
+## 2.4.4
+
+- 🐛 [`fd55e13`](https://github.com/javascript-studio/studio-gateway/commit/fd55e1345f44baecb6b011ee4e29fd28ba60a97f)
+  Adjust logging received requests
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2021-05-21._
+
 ## 2.4.3
 
 - 🐛 [`26390cf`](https://github.com/javascript-studio/studio-gateway/commit/26390cfc9d349b0fedf2e4a2c67b9d6929e6a0fa)
