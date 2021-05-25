@@ -1122,7 +1122,7 @@ describe('gateway', () => {
           path: '/foo/thingy',
           httpMethod: 'PUT',
           headers: {
-            'accept': 'application/json'
+            'Accept': 'application/json'
           },
           pathParameters: { key: 'thingy' },
           queryStringParameters: { this: 'that' },
