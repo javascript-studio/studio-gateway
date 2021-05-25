@@ -1,5 +1,14 @@
 # Changes
 
+## 2.4.5
+
+- 🐛 [`6c8eb40`](https://github.com/javascript-studio/studio-gateway/commit/6c8eb406f5310f999ab3795c6b4a5e8f78f02ed2)
+  Fix authorizer data on request context
+- 🐛 [`dd54d0e`](https://github.com/javascript-studio/studio-gateway/commit/dd54d0e7fbf5786953c4eb17f880df2665d0a7a4)
+  Fix header casing
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2021-05-25._
+
 ## 2.4.4
 
 - 🐛 [`fd55e13`](https://github.com/javascript-studio/studio-gateway/commit/fd55e1345f44baecb6b011ee4e29fd28ba60a97f)
