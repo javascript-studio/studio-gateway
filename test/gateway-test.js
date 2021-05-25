@@ -1130,11 +1130,12 @@ describe('gateway', () => {
           requestContext: match({
             accountId: '0000',
             stage: 'beta',
-            identity: {
+            authorizer: {
               principalId: 'User123',
               key: 'value',
               is: '42'
             },
+            identity: {},
             httpMethod: 'PUT'
           }),
           body: '{"test":"yes"}',
