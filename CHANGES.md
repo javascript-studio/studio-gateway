@@ -1,5 +1,12 @@
 # Changes
 
+## 2.4.6
+
+- 🐛 [`f319b9c`](https://github.com/javascript-studio/studio-gateway/commit/f319b9c8e7ffe14df2043fbc74726e3ae24d191e)
+  Set `pathParameters` and `queryStringParameters` to null if empty
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2021-06-14._
+
 ## 2.4.5
 
 - 🐛 [`6c8eb40`](https://github.com/javascript-studio/studio-gateway/commit/6c8eb406f5310f999ab3795c6b4a5e8f78f02ed2)
