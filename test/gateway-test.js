@@ -1067,6 +1067,56 @@ describe('gateway', () => {
   it('invokes aws_proxy integration lambda', (done) => {
     swag({
       paths: {
+        '/foo': {
+          get: {
+            'x-amazon-apigateway-integration': {
+              type: 'aws_proxy',
+              uri: lambdaUri(),
+              httpMethod: 'POST'
+            }
+          }
+        }
+      }
+    });
+    create({ stage: 'beta', stageVariables: {} });
+    const stub = sinon.stub();
+    stub.withArgs('some-lambda').yields(null, {
+      statusCode: 200,
+      body: '{}'
+    });
+    server.on('lambda', stub);
+
+    supertest(server)
+      .get('/foo')
+      .set('accept', 'application/json')
+      .send({ test: 'yes' })
+      .expect(200, '{}', (err) => {
+        assert.isNull(err);
+        assert.calledOnceWith(stub, 'some-lambda', match({
+          path: '/foo',
+          httpMethod: 'GET',
+          headers: {
+            'Accept': 'application/json'
+          },
+          pathParameters: null,
+          queryStringParameters: null,
+          stageVariables: {},
+          requestContext: match({
+            accountId: '0000',
+            stage: 'beta',
+            authorizer: null,
+            identity: {},
+            httpMethod: 'GET'
+          }),
+          isBase64Encoded: false
+        }));
+        done();
+      });
+  });
+
+  it('invokes aws_proxy integration lambda with path and query parameters', (done) => {
+    swag({
+      paths: {
         '/foo/{key}': {
           put: {
             security: [{
