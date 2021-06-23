@@ -1102,7 +1102,7 @@ describe('gateway', () => {
           queryStringParameters: null,
           stageVariables: {},
           requestContext: match({
-            accountId: '0000',
+            accountId: '000000000000',
             stage: 'beta',
             authorizer: null,
             identity: {},
@@ -1178,7 +1178,7 @@ describe('gateway', () => {
           queryStringParameters: { this: 'that' },
           stageVariables: { foo: 'bar' },
           requestContext: match({
-            accountId: '0000',
+            accountId: '000000000000',
             stage: 'beta',
             authorizer: {
               principalId: 'User123',
