@@ -1,5 +1,12 @@
 # Changes
 
+## 2.4.7
+
+- 🐛 [`2e39414`](https://github.com/javascript-studio/studio-gateway/commit/2e394142a4713b494e18e7f1f3d012a68f6780a6)
+  Fix default AWS account ID
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2021-06-23._
+
 ## 2.4.6
 
 - 🐛 [`f319b9c`](https://github.com/javascript-studio/studio-gateway/commit/f319b9c8e7ffe14df2043fbc74726e3ae24d191e)
