@@ -129,6 +129,37 @@ describe('gateway', () => {
       .expect(200, done);
   });
 
+  it('removes basePath from pathname', (done) => {
+    swag({
+      basePath: '/test',
+      paths: {
+        '/foo': {
+          get: {
+            responses: { 200: {} },
+            'x-amazon-apigateway-integration': {
+              type: 'mock',
+              responses: {
+                default: {
+                  statusCode: '200',
+                  responseParameters: {
+                    'method.response.header.x-foo-bar': '"test"'
+                  },
+                  responseTemplate: '{}'
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    supertest(create())
+      .get('/test/foo')
+      .expect('content-type', 'application/json')
+      .expect('x-foo-bar', 'test')
+      .expect(200, done);
+  });
+
   it('responds with stage variable', (done) => {
     swag({
       paths: {
