@@ -1,5 +1,14 @@
 # Changes
 
+## 2.5.0
+
+- 🍏 [`bd5e7e4`](https://github.com/javascript-studio/studio-gateway/commit/bd5e7e46e47bbe3d7cd8f15b9e50f5a44ff86e5c)
+  Remove swagger basePath from pathname
+- ✨ [`ca38011`](https://github.com/javascript-studio/studio-gateway/commit/ca38011e6ada85c934431a4f42ea116a6f102215)
+  Fix platform dependent test
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2023-01-20._
+
 ## 2.4.7
 
 - 🐛 [`2e39414`](https://github.com/javascript-studio/studio-gateway/commit/2e394142a4713b494e18e7f1f3d012a68f6780a6)
