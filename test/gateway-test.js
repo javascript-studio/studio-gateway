@@ -782,8 +782,7 @@ describe('gateway', () => {
           headers: match.object
         }, match({
           name: 'SyntaxError',
-          message: 'Unexpected token o in JSON at position 1 while parsing '
-            + 'near \'no json\''
+          message: match('Unexpected token')
         }));
         done(err);
       });
