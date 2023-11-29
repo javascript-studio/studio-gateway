@@ -1,5 +1,12 @@
 # Changes
 
+## 2.5.2
+
+- 🐛 [`e13d313`](https://github.com/javascript-studio/studio-gateway/commit/e13d31390d55c6a11395d2c456ad9d98351698b0)
+  Fix mock response templates
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2023-11-29._
+
 ## 2.5.1
 
 - 🐛 [`49d7dca`](https://github.com/javascript-studio/studio-gateway/commit/49d7dca80752e6e3bd638f9c91066e3fec3b96e1)
