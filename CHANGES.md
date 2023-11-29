@@ -1,5 +1,12 @@
 # Changes
 
+## 2.5.1
+
+- 🐛 [`49d7dca`](https://github.com/javascript-studio/studio-gateway/commit/49d7dca80752e6e3bd638f9c91066e3fec3b96e1)
+  Populate resource in proxy integration events
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2023-11-29._
+
 ## 2.5.0
 
 - 🍏 [`bd5e7e4`](https://github.com/javascript-studio/studio-gateway/commit/bd5e7e46e47bbe3d7cd8f15b9e50f5a44ff86e5c)
