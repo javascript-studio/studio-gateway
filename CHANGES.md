@@ -1,5 +1,12 @@
 # Changes
 
+## 2.5.3
+
+- 🐛 [`e763f3e`](https://github.com/javascript-studio/studio-gateway/commit/e763f3e8044a73eda8978b1dc997280cd2feec4f)
+  Handle deny policy response from authorizer
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2024-01-09._
+
 ## 2.5.2
 
 - 🐛 [`e13d313`](https://github.com/javascript-studio/studio-gateway/commit/e13d31390d55c6a11395d2c456ad9d98351698b0)
