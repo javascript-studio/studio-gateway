@@ -855,7 +855,19 @@ describe('gateway', () => {
   it('invokes secured lambda', (done) => {
     jwtAuth();
     const stub = sinon.stub();
-    stub.withArgs('some-auth').yields(null, { principalId: 'User123' });
+    stub.withArgs('some-auth').yields(null, {
+      principalId: 'User123',
+      policyDocument: {
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Action: 'execute-api:Invoke',
+            Effect: 'Allow',
+            Resource: '*'
+          }
+        ]
+      }
+    });
     stub.withArgs('some-lambda').yields(null, { some: 'response' });
     server.on('lambda', stub);
 
@@ -894,6 +906,35 @@ describe('gateway', () => {
       });
   });
 
+  it('responds with 403 if security lambda returns a deny policy', (done) => {
+    jwtAuth();
+    const stub = sinon.stub();
+    stub.withArgs('some-auth').yields(null, {
+      principalId: 'User123',
+      policyDocument: {
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Action: 'execute-api:Invoke',
+            Effect: 'Deny',
+            Resource: '*'
+          }
+        ]
+      }
+    });
+    server.on('lambda', stub);
+
+    supertest(server)
+      .post('/foo')
+      .set('accept', 'application/json')
+      .set('Authorization', 'Bearer abc.def.ghi')
+      .expect('{"message":"Unauthorized"}')
+      .expect(401, (err) => {
+        assert.isNull(err);
+        done();
+      });
+  });
+
   it('responds with 403 if validation expression does not match', (done) => {
     jwtAuth();
     create();
@@ -915,7 +956,19 @@ describe('gateway', () => {
   it('caches secured lambda response', (done) => {
     jwtAuth();
     const stub = sinon.stub();
-    stub.withArgs('some-auth').yields(null, { principalId: 'User123' });
+    stub.withArgs('some-auth').yields(null, {
+      principalId: 'User123',
+      policyDocument: {
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Action: 'execute-api:Invoke',
+            Effect: 'Allow',
+            Resource: '*'
+          }
+        ]
+      }
+    });
     stub.withArgs('some-lambda').yields(null, { some: 'response' });
     server.on('lambda', stub);
 
@@ -976,6 +1029,16 @@ describe('gateway', () => {
     const stub = sinon.stub();
     stub.withArgs('some-auth').yields(null, {
       principalId: 'User123',
+      policyDocument: {
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Action: 'execute-api:Invoke',
+            Effect: 'Allow',
+            Resource: '*'
+          }
+        ]
+      },
       context: {
         key: 'value',
         is: 42
@@ -1177,6 +1240,16 @@ describe('gateway', () => {
     const stub = sinon.stub();
     stub.withArgs('some-auth').yields(null, {
       principalId: 'User123',
+      policyDocument: {
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Action: 'execute-api:Invoke',
+            Effect: 'Allow',
+            Resource: '*'
+          }
+        ]
+      },
       context: {
         key: 'value',
         is: 42
