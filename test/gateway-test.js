@@ -929,7 +929,7 @@ describe('gateway', () => {
       .set('accept', 'application/json')
       .set('Authorization', 'Bearer abc.def.ghi')
       .expect('{"message":"Unauthorized"}')
-      .expect(401, (err) => {
+      .expect(403, (err) => {
         assert.isNull(err);
         done();
       });
