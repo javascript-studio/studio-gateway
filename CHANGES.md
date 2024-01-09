@@ -1,5 +1,12 @@
 # Changes
 
+## 2.5.4
+
+- [`363bcc2`](https://github.com/javascript-studio/studio-gateway/commit/363bcc2b5f3c2d4e198b6eb74b249f82c399a9c2)
+  Response with 403 if custom authorizer responds with deny
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2024-01-09._
+
 ## 2.5.3
 
 - 🐛 [`e763f3e`](https://github.com/javascript-studio/studio-gateway/commit/e763f3e8044a73eda8978b1dc997280cd2feec4f)
