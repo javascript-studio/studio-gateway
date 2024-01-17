@@ -41,6 +41,7 @@
     "mocha": "^8.3.2",
     "supertest": "^3.4.2"
   },
+  "license": "MIT",
   "files": [
     "bin",
     "lib",
