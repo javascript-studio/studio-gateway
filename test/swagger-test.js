@@ -1,4 +1,4 @@
-/*eslint node/no-sync: 0*/
+/*eslint n/no-sync: 0*/
 'use strict';
 
 const fs = require('fs');
