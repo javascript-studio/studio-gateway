@@ -16,15 +16,19 @@ const minimal_mock = {
 };
 
 function lambdaUri(name = 'some-lambda') {
-  return  'arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/'
-    + 'functions/arn:aws:lambda:eu-central-1:123456789:function:'
-    + `studio_${name}:current/invocations`;
+  return (
+    'arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/' +
+    'functions/arn:aws:lambda:eu-central-1:123456789:function:' +
+    `studio_${name}:current/invocations`
+  );
 }
 
-function defineLambda(req_template = '$input.json(\'$\')', res_template = null) {
-  const responseTemplates = res_template ? {
-    'application/json': res_template
-  } : null;
+function defineLambda(req_template = "$input.json('$')", res_template = null) {
+  const responseTemplates = res_template
+    ? {
+        'application/json': res_template
+      }
+    : null;
   return {
     type: 'aws',
     uri: lambdaUri(),
@@ -94,9 +98,7 @@ describe('gateway', () => {
       }
     });
 
-    supertest(create())
-      .get('/foo')
-      .expect(404, done);
+    supertest(create()).get('/foo').expect(404, done);
   });
 
   it('responds with mock response', (done) => {
@@ -212,9 +214,15 @@ describe('gateway', () => {
       .expect('{"some":"response"}')
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          // Empty body
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            // Empty body
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -267,7 +275,7 @@ describe('gateway', () => {
                 '.*"code":"E_*': {
                   statusCode: '500',
                   responseTemplates: {
-                    'application/json': '$input.path(\'$.errorMessage\')'
+                    'application/json': "$input.path('$.errorMessage')"
                   }
                 }
               }
@@ -279,10 +287,7 @@ describe('gateway', () => {
     create();
     server.on('lambda', sinon.stub().yields('{"code":"E_FOO"}'));
 
-    supertest(server)
-      .post('/foo')
-      .expect('{"code":"E_FOO"}')
-      .expect(500, done);
+    supertest(server).post('/foo').expect('{"code":"E_FOO"}').expect(500, done);
   });
 
   it('maps stage name', (done) => {
@@ -292,8 +297,9 @@ describe('gateway', () => {
           post: {
             responses: { 200: {} },
             parameters: [],
-            'x-amazon-apigateway-integration':
-              defineLambda('{"stage":"$context.stage"}')
+            'x-amazon-apigateway-integration': defineLambda(
+              '{"stage":"$context.stage"}'
+            )
           }
         }
       }
@@ -307,9 +313,15 @@ describe('gateway', () => {
       .set('Authorization', 'Secret')
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          stage: 'beta'
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            stage: 'beta'
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -321,8 +333,9 @@ describe('gateway', () => {
           post: {
             responses: { 200: {} },
             parameters: [],
-            'x-amazon-apigateway-integration':
-              defineLambda('{"foo":"$stageVariables.foo"}')
+            'x-amazon-apigateway-integration': defineLambda(
+              '{"foo":"$stageVariables.foo"}'
+            )
           }
         }
       }
@@ -336,9 +349,15 @@ describe('gateway', () => {
       .set('Authorization', 'Secret')
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          foo: 'bar'
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            foo: 'bar'
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -349,13 +368,16 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            parameters: [{
-              name: 'Authorization',
-              in: 'header',
-              type: 'string'
-            }],
-            'x-amazon-apigateway-integration':
-              defineLambda('{"auth":"$input.params(\'Authorization\')"}')
+            parameters: [
+              {
+                name: 'Authorization',
+                in: 'header',
+                type: 'string'
+              }
+            ],
+            'x-amazon-apigateway-integration': defineLambda(
+              '{"auth":"$input.params(\'Authorization\')"}'
+            )
           }
         }
       }
@@ -369,9 +391,15 @@ describe('gateway', () => {
       .set('Authorization', 'Secret')
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          auth: 'Secret'
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            auth: 'Secret'
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -382,17 +410,19 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            parameters: [{
-              in: 'body',
-              schema: {
-                type: 'object',
-                properties: {
-                  some: {
-                    type: 'string'
+            parameters: [
+              {
+                in: 'body',
+                schema: {
+                  type: 'object',
+                  properties: {
+                    some: {
+                      type: 'string'
+                    }
                   }
                 }
               }
-            }],
+            ],
             'x-amazon-apigateway-integration': defineLambda()
           }
         }
@@ -408,9 +438,15 @@ describe('gateway', () => {
       .send({ some: 'content' })
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          some: 'content'
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            some: 'content'
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -421,15 +457,17 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            parameters: [{
-              in: 'body',
-              schema: {
-                type: 'object',
-                properties: {
-                  some: {}
+            parameters: [
+              {
+                in: 'body',
+                schema: {
+                  type: 'object',
+                  properties: {
+                    some: {}
+                  }
                 }
               }
-            }],
+            ],
             'x-amazon-apigateway-integration': defineLambda()
           }
         }
@@ -445,9 +483,15 @@ describe('gateway', () => {
       .send({ some: 42 })
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          some: 42
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            some: 42
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -458,22 +502,24 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            parameters: [{
-              in: 'body',
-              schema: {
-                type: 'object',
-                properties: {
-                  some: {
-                    type: 'object',
-                    properties: {
-                      thing: {
-                        type: 'string'
+            parameters: [
+              {
+                in: 'body',
+                schema: {
+                  type: 'object',
+                  properties: {
+                    some: {
+                      type: 'object',
+                      properties: {
+                        thing: {
+                          type: 'string'
+                        }
                       }
                     }
                   }
                 }
               }
-            }],
+            ],
             'x-amazon-apigateway-integration': defineLambda()
           }
         }
@@ -489,9 +535,15 @@ describe('gateway', () => {
       .send({ some: { thing: 'content' } })
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          some: { thing: 'content' }
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            some: { thing: 'content' }
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -502,20 +554,22 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            parameters: [{
-              in: 'body',
-              schema: {
-                type: 'object',
-                properties: {
-                  some: {
-                    type: 'array',
-                    items: {
-                      type: 'string'
+            parameters: [
+              {
+                in: 'body',
+                schema: {
+                  type: 'object',
+                  properties: {
+                    some: {
+                      type: 'array',
+                      items: {
+                        type: 'string'
+                      }
                     }
                   }
                 }
               }
-            }],
+            ],
             'x-amazon-apigateway-integration': defineLambda()
           }
         }
@@ -531,9 +585,15 @@ describe('gateway', () => {
       .send({ some: ['array', 'content'] })
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          some: ['array', 'content']
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            some: ['array', 'content']
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -544,13 +604,15 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            parameters: [{
-              in: 'body',
-              schema: {
-                type: 'object',
-                properties: {}
+            parameters: [
+              {
+                in: 'body',
+                schema: {
+                  type: 'object',
+                  properties: {}
+                }
               }
-            }],
+            ],
             'x-amazon-apigateway-integration': defineLambda()
           }
         }
@@ -577,12 +639,14 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            parameters: [{
-              in: 'body',
-              schema: {
-                type: 'object'
+            parameters: [
+              {
+                in: 'body',
+                schema: {
+                  type: 'object'
+                }
               }
-            }],
+            ],
             'x-amazon-apigateway-integration': defineLambda()
           }
         }
@@ -598,9 +662,15 @@ describe('gateway', () => {
       .send({ some: 'content' }) // provided, but ignored
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          some: 'content'
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            some: 'content'
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -611,9 +681,11 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            parameters: [{
-              in: 'body'
-            }],
+            parameters: [
+              {
+                in: 'body'
+              }
+            ],
             'x-amazon-apigateway-integration': defineLambda()
           }
         }
@@ -631,13 +703,16 @@ describe('gateway', () => {
         '/foo': {
           get: {
             responses: { 200: {} },
-            parameters: [{
-              name: 'some',
-              in: 'query',
-              type: 'string'
-            }],
-            'x-amazon-apigateway-integration':
-              defineLambda('{"some":"$input.params(\'some\')"}')
+            parameters: [
+              {
+                name: 'some',
+                in: 'query',
+                type: 'string'
+              }
+            ],
+            'x-amazon-apigateway-integration': defineLambda(
+              '{"some":"$input.params(\'some\')"}'
+            )
           }
         }
       }
@@ -650,9 +725,15 @@ describe('gateway', () => {
       .get('/foo?some=query')
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          some: 'query'
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            some: 'query'
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -663,13 +744,16 @@ describe('gateway', () => {
         '/foo': {
           get: {
             responses: { 200: {} },
-            parameters: [{
-              name: 'some',
-              in: 'query',
-              type: 'boolean'
-            }],
-            'x-amazon-apigateway-integration':
-              defineLambda('{"some":$input.params(\'some\')}')
+            parameters: [
+              {
+                name: 'some',
+                in: 'query',
+                type: 'boolean'
+              }
+            ],
+            'x-amazon-apigateway-integration': defineLambda(
+              '{"some":$input.params(\'some\')}'
+            )
           }
         }
       }
@@ -682,9 +766,15 @@ describe('gateway', () => {
       .get('/foo?some=1')
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          some: true
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            some: true
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -695,17 +785,19 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            parameters: [{
-              in: 'body',
-              schema: {
-                type: 'object',
-                properties: {
-                  some: {
-                    type: 'string'
+            parameters: [
+              {
+                in: 'body',
+                schema: {
+                  type: 'object',
+                  properties: {
+                    some: {
+                      type: 'string'
+                    }
                   }
                 }
               }
-            }],
+            ],
             'x-amazon-apigateway-integration': defineLambda()
           }
         }
@@ -720,9 +812,15 @@ describe('gateway', () => {
       .send('some=content')
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          some: 'content'
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            some: 'content'
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -733,18 +831,22 @@ describe('gateway', () => {
         '/path/{this}/{that}': {
           get: {
             responses: { 200: {} },
-            parameters: [{
-              name: 'this',
-              in: 'path',
-              type: 'string'
-            }, {
-              name: 'that',
-              in: 'path',
-              type: 'string'
-            }],
+            parameters: [
+              {
+                name: 'this',
+                in: 'path',
+                type: 'string'
+              },
+              {
+                name: 'that',
+                in: 'path',
+                type: 'string'
+              }
+            ],
             'x-amazon-apigateway-integration': defineLambda(
-              '{"this":"$input.params(\'this\')",'
-              + '"that":"$input.params(\'that\')"}')
+              '{"this":"$input.params(\'this\')",' +
+                '"that":"$input.params(\'that\')"}'
+            )
           }
         }
       }
@@ -757,10 +859,16 @@ describe('gateway', () => {
       .get('/path/foo/bar')
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', {
-          this: 'foo',
-          that: 'bar'
-        }, {}, sinon.match.func);
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          {
+            this: 'foo',
+            that: 'bar'
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -771,8 +879,10 @@ describe('gateway', () => {
         '/foo': {
           post: {
             responses: { 200: {} },
-            'x-amazon-apigateway-integration': defineLambda('{}',
-              '{"wrapped":$input.json(\'$\')}')
+            'x-amazon-apigateway-integration': defineLambda(
+              '{}',
+              '{"wrapped":$input.json(\'$\')}'
+            )
           }
         }
       }
@@ -802,19 +912,26 @@ describe('gateway', () => {
 
     supertest(server)
       .post('/foo')
-      .expect(JSON.stringify({
-        errorMessage: 'Internal server error'
-      }))
+      .expect(
+        JSON.stringify({
+          errorMessage: 'Internal server error'
+        })
+      )
       .expect(500, (err) => {
         assert.calledOnce(log.error);
-        assert.calledWith(log.error, 'Internal server error', {
-          method: 'POST',
-          url: '/foo',
-          headers: match.object
-        }, match({
-          name: 'SyntaxError',
-          message: match('Unexpected token')
-        }));
+        assert.calledWith(
+          log.error,
+          'Internal server error',
+          {
+            method: 'POST',
+            url: '/foo',
+            headers: match.object
+          },
+          match({
+            name: 'SyntaxError',
+            message: match('Unexpected token')
+          })
+        );
         done(err);
       });
   });
@@ -824,9 +941,11 @@ describe('gateway', () => {
       paths: {
         '/foo': {
           post: {
-            security: [{
-              JWT: []
-            }],
+            security: [
+              {
+                JWT: []
+              }
+            ],
             responses: { 200: {} },
             'x-amazon-apigateway-integration': defineLambda(
               '{"user":"$context.authorizer.principalId"}'
@@ -879,12 +998,24 @@ describe('gateway', () => {
       .expect(200, (err) => {
         assert.isNull(err);
         assert.calledTwice(stub);
-        assert.calledWith(stub, 'some-auth', {
-          authorizationToken: 'Bearer abc.def.ghi'
-        }, {}, sinon.match.func);
-        assert.calledWith(stub, 'some-lambda', {
-          user: 'User123'
-        }, {}, sinon.match.func);
+        assert.calledWith(
+          stub,
+          'some-auth',
+          {
+            authorizationToken: 'Bearer abc.def.ghi'
+          },
+          {},
+          sinon.match.func
+        );
+        assert.calledWith(
+          stub,
+          'some-lambda',
+          {
+            user: 'User123'
+          },
+          {},
+          sinon.match.func
+        );
         done();
       });
   });
@@ -988,9 +1119,15 @@ describe('gateway', () => {
           .expect('{"some":"response"}')
           .expect(200, (err2) => {
             assert.isNull(err2);
-            assert.calledOnceWith(stub, 'some-lambda', {
-              user: 'User123'
-            }, {}, sinon.match.func);
+            assert.calledOnceWith(
+              stub,
+              'some-lambda',
+              {
+                user: 'User123'
+              },
+              {},
+              sinon.match.func
+            );
             done();
           });
       });
@@ -1001,9 +1138,11 @@ describe('gateway', () => {
       paths: {
         '/foo': {
           post: {
-            security: [{
-              JWT: []
-            }],
+            security: [
+              {
+                JWT: []
+              }
+            ],
             responses: { 200: {} },
             'x-amazon-apigateway-integration': defineLambda(
               '{"key":"$context.authorizer.key","is":$context.authorizer.is}'
@@ -1068,12 +1207,14 @@ describe('gateway', () => {
         '/foo': {
           get: {
             responses: { 200: {} },
-            parameters: [{
-              name: 'some',
-              in: 'query',
-              type: 'string',
-              required: true
-            }],
+            parameters: [
+              {
+                name: 'some',
+                in: 'query',
+                type: 'string',
+                required: true
+              }
+            ],
             'x-amazon-apigateway-integration': defineLambda()
           }
         }
@@ -1098,18 +1239,20 @@ describe('gateway', () => {
     return {
       post: {
         responses: { 200: {} },
-        parameters: [{
-          in: 'body',
-          schema: {
-            type: 'object',
-            properties: {
-              test: {
-                type: 'string'
-              }
-            },
-            required: ['test']
+        parameters: [
+          {
+            in: 'body',
+            schema: {
+              type: 'object',
+              properties: {
+                test: {
+                  type: 'string'
+                }
+              },
+              required: ['test']
+            }
           }
-        }],
+        ],
         'x-amazon-apigateway-integration': defineLambda()
       }
     };
@@ -1185,24 +1328,28 @@ describe('gateway', () => {
       .send({ test: 'yes' })
       .expect(200, '{}', (err) => {
         assert.isNull(err);
-        assert.calledOnceWith(stub, 'some-lambda', match({
-          path: '/foo',
-          httpMethod: 'GET',
-          headers: {
-            'Accept': 'application/json'
-          },
-          pathParameters: null,
-          queryStringParameters: null,
-          stageVariables: {},
-          requestContext: match({
-            accountId: '000000000000',
-            stage: 'beta',
-            authorizer: null,
-            identity: {},
-            httpMethod: 'GET'
-          }),
-          isBase64Encoded: false
-        }));
+        assert.calledOnceWith(
+          stub,
+          'some-lambda',
+          match({
+            path: '/foo',
+            httpMethod: 'GET',
+            headers: {
+              Accept: 'application/json'
+            },
+            pathParameters: null,
+            queryStringParameters: null,
+            stageVariables: {},
+            requestContext: match({
+              accountId: '000000000000',
+              stage: 'beta',
+              authorizer: null,
+              identity: {},
+              httpMethod: 'GET'
+            }),
+            isBase64Encoded: false
+          })
+        );
         done();
       });
   });
@@ -1212,9 +1359,11 @@ describe('gateway', () => {
       paths: {
         '/foo/{key}': {
           put: {
-            security: [{
-              JWT: []
-            }],
+            security: [
+              {
+                JWT: []
+              }
+            ],
             'x-amazon-apigateway-integration': {
               type: 'aws_proxy',
               uri: lambdaUri(),
@@ -1271,29 +1420,33 @@ describe('gateway', () => {
         assert.calledWith(stub, 'some-auth', {
           authorizationToken: 'Bearer abc.def.ghi'
         });
-        assert.calledWith(stub, 'some-lambda', match({
-          path: '/foo/thingy',
-          httpMethod: 'PUT',
-          headers: {
-            'Accept': 'application/json'
-          },
-          pathParameters: { key: 'thingy' },
-          queryStringParameters: { this: 'that' },
-          stageVariables: { foo: 'bar' },
-          requestContext: match({
-            accountId: '000000000000',
-            stage: 'beta',
-            authorizer: {
-              principalId: 'User123',
-              key: 'value',
-              is: '42'
+        assert.calledWith(
+          stub,
+          'some-lambda',
+          match({
+            path: '/foo/thingy',
+            httpMethod: 'PUT',
+            headers: {
+              Accept: 'application/json'
             },
-            identity: {},
-            httpMethod: 'PUT'
-          }),
-          body: '{"test":"yes"}',
-          isBase64Encoded: false
-        }));
+            pathParameters: { key: 'thingy' },
+            queryStringParameters: { this: 'that' },
+            stageVariables: { foo: 'bar' },
+            requestContext: match({
+              accountId: '000000000000',
+              stage: 'beta',
+              authorizer: {
+                principalId: 'User123',
+                key: 'value',
+                is: '42'
+              },
+              identity: {},
+              httpMethod: 'PUT'
+            }),
+            body: '{"test":"yes"}',
+            isBase64Encoded: false
+          })
+        );
         done();
       });
   });
@@ -1324,10 +1477,14 @@ describe('gateway', () => {
       .send()
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledWith(stub, 'some-lambda', match({
-          path: '/foo',
-          httpMethod: 'DELETE'
-        }));
+        assert.calledWith(
+          stub,
+          'some-lambda',
+          match({
+            path: '/foo',
+            httpMethod: 'DELETE'
+          })
+        );
         done();
       });
   });
@@ -1358,15 +1515,18 @@ describe('gateway', () => {
       .send()
       .expect(200, (err) => {
         assert.isNull(err);
-        assert.calledWith(stub, 'some-lambda', match({
-          path: '/foo/bar/baz',
-          httpMethod: 'GET',
-          pathParameters: {
-            proxy: 'bar/baz'
-          }
-        }));
+        assert.calledWith(
+          stub,
+          'some-lambda',
+          match({
+            path: '/foo/bar/baz',
+            httpMethod: 'GET',
+            pathParameters: {
+              proxy: 'bar/baz'
+            }
+          })
+        );
         done();
       });
   });
-
 });
