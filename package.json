@@ -18,7 +18,8 @@
     "version": "changes --commits --footer",
     "postversion": "git push --follow-tags && npm publish",
     "prettier:check": "prettier --check '**/*.{js,md}'",
-    "prettier:write": "prettier --write '**/*.{js,md}'"
+    "prettier:write": "prettier --write '**/*.{js,md}'",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": "@studio"
@@ -39,6 +40,8 @@
     "@studio/eslint-config": "^6.0.0",
     "eslint": "^8.56.0",
     "eslint-plugin-node": "^11.1.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
     "mocha": "^8.3.2",
     "prettier": "^3.2.4",
     "supertest": "^3.4.2"
