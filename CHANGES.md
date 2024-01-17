@@ -1,5 +1,34 @@
 # Changes
 
+## 3.0.0
+
+- [`365bf27`](https://github.com/javascript-studio/studio-gateway/commit/365bf2715f1b8e477f8d19d23ddea34eced54941)
+  Drop node 12 and 14, support node 18 and 20
+- [`7154beb`](https://github.com/javascript-studio/studio-gateway/commit/7154beb585b09bf3de305c576610fe713e2d6e8c)
+  Use husky and lint-staged
+- [`9796ba6`](https://github.com/javascript-studio/studio-gateway/commit/9796ba62d04d2943b1296b2296ac74fd03b1f9b6)
+  Use prettier
+- [`f181da6`](https://github.com/javascript-studio/studio-gateway/commit/f181da600e04d18d830d094fbaed21f0e7b7d211)
+  npm audit
+- [`4254f0a`](https://github.com/javascript-studio/studio-gateway/commit/4254f0a4744f63f70f58a28b0370041eaf828d0b)
+  Update minimist
+- [`3fbdced`](https://github.com/javascript-studio/studio-gateway/commit/3fbdcedcda1da8c5bf1f27d8e68849b72ce0fc01)
+  Update Studio Fail
+- [`4cc686f`](https://github.com/javascript-studio/studio-gateway/commit/4cc686fc005e8865d12b5af95bbed856067de53d)
+  Upgrade Studio ESLint Config and update eslint
+- [`0a4bad2`](https://github.com/javascript-studio/studio-gateway/commit/0a4bad2a2f0b3d36e3b1571b3c76a9e632954565)
+  Upgrade Studio Changes
+- [`3a10115`](https://github.com/javascript-studio/studio-gateway/commit/3a10115d4c2db6793127d6c2e201f3541188fe0a)
+  Upgrade referee-sinon
+- [`a61a5df`](https://github.com/javascript-studio/studio-gateway/commit/a61a5df5933954500626bf3ed685f811fa0b39b1)
+  Rename master to main
+- [`9d48128`](https://github.com/javascript-studio/studio-gateway/commit/9d48128eeb6e58e7c82467f2dbd1b3e0d92ac76f)
+  State MIT license in package.json
+- [`e976dba`](https://github.com/javascript-studio/studio-gateway/commit/e976dba0fccb7376080189ca3c445304115c513c)
+  Add LICENSE
+
+_Released by [Maximilian Antoni](https://github.com/mantoni) on 2024-01-17._
+
 ## 2.5.4
 
 - [`363bcc2`](https://github.com/javascript-studio/studio-gateway/commit/363bcc2b5f3c2d4e198b6eb74b249f82c399a9c2)
