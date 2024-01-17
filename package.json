@@ -22,7 +22,7 @@
     "extends": "@studio"
   },
   "dependencies": {
-    "@studio/fail": "^1.5.0",
+    "@studio/fail": "^1.7.0",
     "@studio/log": "^2.0.0",
     "dotenv": "^6.0.0",
     "js-string-escape": "^1.0.1",
