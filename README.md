@@ -23,7 +23,7 @@ const Gateway = require('@studio/gateway');
 const Lambda = require('@studio/lambda');
 
 const lambda = Lambda.create();
-const gateway = Gateway.create()
+const gateway = Gateway.create();
 gateway.on('lambda', lambda.invoke);
 gateway.listen(1337);
 ```
@@ -32,10 +32,10 @@ gateway.listen(1337);
 
 - `gateway = Gateway.create([options])`: Returns a new gateway server
   for the given options.
-    - `swagger_file`: The swagger file to read. Defaults to `swagger.json`.
-    - `swagger_env`: The [dotenv][] config to read.
-    - `stage`: The stage name to use. Defaults to "local".
-    - `stageVariables`: The stage variables to use. Default to an empty object.
+  - `swagger_file`: The swagger file to read. Defaults to `swagger.json`.
+  - `swagger_env`: The [dotenv][] config to read.
+  - `stage`: The stage name to use. Defaults to "local".
+  - `stageVariables`: The stage variables to use. Default to an empty object.
 - `gateway.listen(port[, callback])`: Bind the server to the given port.
 
 ## Events

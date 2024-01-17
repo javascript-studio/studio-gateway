@@ -6,7 +6,6 @@ const { assert, refute, sinon } = require('@sinonjs/referee-sinon');
 const swagger = require('../lib/swagger');
 
 describe('loadSwagger', () => {
-
   beforeEach(() => {
     sinon.stub(fs, 'readFileSync');
   });
@@ -33,9 +32,9 @@ describe('loadSwagger', () => {
   });
 
   it('replaces external $ref with json', () => {
-    fs.readFileSync.withArgs('swagger.json').returns(
-      '{"some":{"$ref":"other/file.json"}}'
-    );
+    fs.readFileSync
+      .withArgs('swagger.json')
+      .returns('{"some":{"$ref":"other/file.json"}}');
     fs.readFileSync.withArgs('other/file.json').returns('{"other":"content"}');
 
     const json = swagger.loadSwagger();
@@ -48,13 +47,13 @@ describe('loadSwagger', () => {
   });
 
   it('replaces $ref recursively', () => {
-    fs.readFileSync.withArgs('swagger.json').returns(
-      '{"some":{"$ref":"other/file.json"}}'
-    );
-    fs.readFileSync.withArgs('other/file.json').returns(
-      '{"other":{"$ref":"../more/files.json"}}');
-    fs.readFileSync.withArgs('more/files.json').returns(
-      '{"deep":true}');
+    fs.readFileSync
+      .withArgs('swagger.json')
+      .returns('{"some":{"$ref":"other/file.json"}}');
+    fs.readFileSync
+      .withArgs('other/file.json')
+      .returns('{"other":{"$ref":"../more/files.json"}}');
+    fs.readFileSync.withArgs('more/files.json').returns('{"deep":true}');
 
     const json = swagger.loadSwagger();
 
@@ -68,9 +67,9 @@ describe('loadSwagger', () => {
   });
 
   it('does not try to read local reference', () => {
-    fs.readFileSync.withArgs('swagger.json').returns(
-      '{"some":{"$ref":"#/def/model"}}'
-    );
+    fs.readFileSync
+      .withArgs('swagger.json')
+      .returns('{"some":{"$ref":"#/def/model"}}');
 
     refute.exception(() => {
       swagger.loadSwagger();
@@ -116,12 +115,9 @@ describe('loadSwagger', () => {
     // eslint-disable-next-line no-template-curly-in-string
     assert.equals(json, { some: '${stageVariables.unknown}' });
   });
-
 });
 
-
 describe('inlineSwaggerRefs', () => {
-
   it('inlines local swagger refs', () => {
     const json = {
       some: {
@@ -158,5 +154,4 @@ describe('inlineSwaggerRefs', () => {
       definitions: json.definitions
     });
   });
-
 });
